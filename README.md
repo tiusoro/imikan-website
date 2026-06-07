@@ -1,4 +1,4 @@
-# NeuralSync AI — RAG & Shopify AI Integrations Landing Page
+# Imikan Technologies AI — RAG & Shopify AI Integrations Landing Page
 
 A modern, production-ready landing page for an AI integrations company specializing in **Retrieval-Augmented Generation (RAG)** pipelines and **Shopify AI automation**.
 
@@ -30,10 +30,10 @@ A modern, production-ready landing page for an AI integrations company specializ
 
 ```bash
 # Clone or download the repository
-git clone https://github.com/yourusername/neuralsync-landing.git
+git clone https://github.com/tiusoro/imikan-website.git
 
 # Navigate to the project
-cd neuralsync-landing
+cd imikan-landing
 
 # Open in browser (no build step required)
 open index.html
@@ -50,7 +50,7 @@ python -m http.server 8000
 ## 📁 Project Structure
 
 ```
-neuralsync-landing/
+Imikan-landing/
 ├── index.html          # Complete landing page (single file)
 ├── README.md           # This file
 └── assets/             # Optional: images, favicon, OG tags
@@ -195,8 +195,8 @@ All responsive behavior is handled by Tailwind's utility classes (`md:`, `lg:`, 
 Add these inside `<head>` for production:
 
 ```html
-<meta name="description" content="NeuralSync AI — Enterprise RAG pipelines and Shopify AI automations. Transform unstructured data into actionable intelligence.">
-<meta property="og:title" content="NeuralSync AI — RAG & Shopify Intelligence">
+<meta name="description" content="Imikan AI — Enterprise RAG pipelines and Shopify AI automations. Transform unstructured data into actionable intelligence.">
+<meta property="og:title" content="Imikan AI — RAG & Shopify Intelligence">
 <meta property="og:description" content="Build intelligent applications with sub-second latency.">
 <meta property="og:image" content="https://yoursite.com/assets/og-image.png">
 <meta property="og:url" content="https://yoursite.com">
@@ -268,14 +268,14 @@ MIT License — feel free to use for personal or commercial projects. Attributio
 
 ## 💬 Support
 
-- **Documentation**: [docs.neuralsync.ai](https://docs.neuralsync.ai)
-- **Discord**: [discord.gg/neuralsync](https://discord.gg/neuralsync)
-- **Email**: hello@neuralsync.ai
-- **Status**: [status.neuralsync.ai](https://status.neuralsync.ai)
+- **Documentation**: [docs.imikan.ai](https://docs.imikan.ai)
+- **Discord**: [discord.gg/imikan](https://discord.gg/imikan)
+- **Email**: hello@imikan.ai
+- **Status**: [status.imikan.ai](https://status.imikan.ai)
 
 ---
 
 <p align="center">
-  <strong>Built with 💜 and 💙 by the NeuralSync Team</strong><br>
+  <strong>Built with 💜 and 💙 by the Imikan Technologies Team</strong><br>
   <sub>Transforming data into intelligence, one query at a time.</sub>
 </p>

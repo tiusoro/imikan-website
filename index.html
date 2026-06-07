@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuralSync AI — RAG & Shopify Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                        },
+                        accent: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0f1a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .glass-strong {
+            background: rgba(15, 15, 26, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.15);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 50%, #c4b5fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-border {
+            position: relative;
+        }
+        
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(135deg, #8b5cf6, #3b82f6, #a78bfa);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        
+        .mesh-bg {
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+        }
+        
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -15px rgba(139, 92, 246, 0.3);
+        }
+        
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s step-end infinite;
+            color: #a78bfa;
+        }
+        
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+        
+        .code-block {
+            background: rgba(15, 15, 26, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            font-family: 'Space Grotesk', monospace;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Noise Overlay -->
+    <div class="noise"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-strong border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div class="relative w-10 h-10 flex items-center justify-center">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary-500 to-accent-500 rounded-xl rotate-3 group-hover:rotate-6 transition-transform duration-300"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary-600 to-accent-600 rounded-xl"></div>
+                        <i data-lucide="brain-circuit" class="relative z-10 w-5 h-5 text-white"></i>
+                    </div>
+                    <span class="font-display font-bold text-xl tracking-tight text-white">
+                        Neural<span class="gradient-text">Sync</span>
+                    </span>
+                </div>
+                
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#solutions" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Solutions</a>
+                    <a href="#rag" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">RAG Engine</a>
+                    <a href="#shopify" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Shopify AI</a>
+                    <a href="#docs" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Docs</a>
+                    <a href="#pricing" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Pricing</a>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <button class="hidden md:block text-sm font-medium text-gray-300 hover:text-white transition-colors">Sign In</button>
+                    <button class="relative group px-6 py-2.5 rounded-full bg-gradient-to-r from-primary-600 to-accent-600 text-white text-sm font-semibold overflow-hidden">
+                        <span class="relative z-10">Get Started</span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden mesh-bg">
+        <div class="hero-glow"></div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute top-32 left-10 w-64 h-64 bg-primary-500/10 rounded-full blur-3xl animate-float"></div>
+        <div class="absolute bottom-32 right-10 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl animate-float" style="animation-delay: 2s;"></div>
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-primary-500/20 mb-8 reveal">
+                <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse"></span>
+                <span class="text-sm font-medium text-primary-300">Now with GPT-4o Integration</span>
+            </div>
+            
+            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-6 reveal" style="transition-delay: 100ms;">
+                <span class="block text-white">Intelligence That</span>
+                <span class="gradient-text typing-cursor" id="typing-text">Understands Your Data</span>
+            </h1>
+            
+            <p class="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 mb-12 leading-relaxed reveal" style="transition-delay: 200ms;">
+                Enterprise-grade RAG pipelines and Shopify AI automations. Transform unstructured data into actionable intelligence with sub-second latency.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal" style="transition-delay: 300ms;">
+                <button class="group relative px-8 py-4 rounded-full bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold text-lg overflow-hidden shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 transition-all duration-300">
+                    <span class="relative z-10 flex items-center gap-2">
+                        Start Building Free
+                        <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+                <button class="px-8 py-4 rounded-full glass text-white font-semibold text-lg hover:bg-white/5 transition-all duration-300 flex items-center gap-2">
+                    <i data-lucide="play-circle" class="w-5 h-5 text-primary-400"></i>
+                    Watch Demo
+                </button>
+            </div>
+
+            <!-- Stats -->
+            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto reveal" style="transition-delay: 400ms;">
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-display font-bold gradient-text">50ms</div>
+                    <div class="text-sm text-gray-500 mt-1">Avg. Latency</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-display font-bold gradient-text">99.9%</div>
+                    <div class="text-sm text-gray-500 mt-1">Uptime SLA</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-display font-bold gradient-text">10M+</div>
+                    <div class="text-sm text-gray-500 mt-1">Docs Processed</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl md:text-4xl font-display font-bold gradient-text">500+</div>
+                    <div class="text-sm text-gray-500 mt-1">Shopify Stores</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <i data-lucide="chevron-down" class="w-6 h-6 text-gray-600"></i>
+        </div>
+    </section>
+
+    <!-- Trusted By -->
+    <section class="py-20 border-y border-white/5 bg-black/20">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <p class="text-center text-sm font-medium text-gray-500 uppercase tracking-wider mb-10">Trusted by innovative teams</p>
+            <div class="flex flex-wrap justify-center items-center gap-12 md:gap-16 opacity-50">
+                <div class="flex items-center gap-2 text-xl font-display font-bold text-gray-400">
+                    <i data-lucide="hexagon" class="w-6 h-6"></i> Vercel
+                </div>
+                <div class="flex items-center gap-2 text-xl font-display font-bold text-gray-400">
+                    <i data-lucide="triangle" class="w-6 h-6"></i> Linear
+                </div>
+                <div class="flex items-center gap-2 text-xl font-display font-bold text-gray-400">
+                    <i data-lucide="circle" class="w-6 h-6"></i> Notion
+                </div>
+                <div class="flex items-center gap-2 text-xl font-display font-bold text-gray-400">
+                    <i data-lucide="square" class="w-6 h-6"></i> Figma
+                </div>
+                <div class="flex items-center gap-2 text-xl font-display font-bold text-gray-400">
+                    <i data-lucide="diamond" class="w-6 h-6"></i> Raycast
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RAG Engine Section -->
+    <section id="rag" class="py-32 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-900/20 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-sm font-medium mb-6">
+                        <i data-lucide="database" class="w-4 h-4"></i>
+                        RAG Infrastructure
+                    </div>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                        Retrieval-Augmented Generation<br>
+                        <span class="gradient-text">That Actually Works</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        Don't settle for hallucinations. Our hybrid search combines vector similarity with keyword matching, re-ranking, and citation tracking for grounded, verifiable answers.
+                    </p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-4 rounded-xl glass card-hover">
+                            <div class="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="file-text" class="w-5 h-5 text-primary-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-white mb-1">Multi-Format Ingestion</h3>
+                                <p class="text-sm text-gray-400">PDF, Word, Excel, Markdown, and HTML. Automatic OCR for scanned documents.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 p-4 rounded-xl glass card-hover">
+                            <div class="w-10 h-10 rounded-lg bg-accent-500/20 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="git-branch" class="w-5 h-5 text-accent-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-white mb-1">Smart Chunking</h3>
+                                <p class="text-sm text-gray-400">Semantic chunking with overlap preservation. Maintains context across boundaries.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start gap-4 p-4 rounded-xl glass card-hover">
+                            <div class="w-10 h-10 rounded-lg bg-primary-500/20 flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-primary-400"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-white mb-1">Source Attribution</h3>
+                                <p class="text-sm text-gray-400">Every answer includes citations with page numbers and confidence scores.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="relative reveal">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-2xl blur-2xl"></div>
+                    <div class="relative code-block rounded-2xl p-6 shadow-2xl">
+                        <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-4">
+                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                            <span class="ml-2 text-xs text-gray-500 font-mono">rag_pipeline.py</span>
+                        </div>
+                        <pre class="text-sm overflow-x-auto scrollbar-hide"><code class="language-python text-gray-300">
+<span class="text-purple-400">from</span> neuralsync <span class="text-purple-400">import</span> RAGPipeline, VectorStore
+
+<span class="text-gray-500"># Initialize with pgvector backend</span>
+pipeline = RAGPipeline(
+    embedding_model=<span class="text-green-400">"text-embedding-3-large"</span>,
+    vector_store=VectorStore.<span class="text-blue-400">postgres</span>(
+        connection_string=<span class="text-green-400">"postgresql://..."</span>,
+        dimension=<span class="text-orange-400">1536</span>
+    ),
+    chunk_size=<span class="text-orange-400">1000</span>,
+    chunk_overlap=<span class="text-orange-400">200</span>
+)
+
+<span class="text-gray-500"># Ingest documents</span>
+<span class="text-purple-400">await</span> pipeline.ingest([
+    <span class="text-green-400">"annual_report.pdf"</span>,
+    <span class="text-green-400">"product_specs.docx"</span>
+])
+
+<span class="text-gray-500"># Query with citations</span>
+response = <span class="text-purple-400">await</span> pipeline.query(
+    <span class="text-green-400">"What were Q3 revenue figures?"</span>,
+    include_sources=<span class="text-orange-400">True</span>
+)
+<span class="text-gray-500"># Returns: { answer, sources[], confidence }</span>
+                        </code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopify AI Section -->
+    <section id="shopify" class="py-32 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-1/2 h-full bg-gradient-to-r from-accent-900/20 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="order-2 lg:order-1 relative reveal">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-accent-500/20 to-primary-500/20 rounded-2xl blur-2xl"></div>
+                    <div class="relative glass rounded-2xl p-1 shadow-2xl">
+                        <div class="bg-[#0f0f1a] rounded-xl overflow-hidden">
+                            <div class="flex items-center gap-3 px-4 py-3 border-b border-white/5 bg-white/5">
+                                <i data-lucide="shopping-bag" class="w-5 h-5 text-accent-400"></i>
+                                <span class="text-sm font-medium text-gray-300">TechBot — AI Shopping Assistant</span>
+                                <span class="ml-auto flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    <span class="text-xs text-green-400">Online</span>
+                                </span>
+                            </div>
+                            <div class="p-4 space-y-4 h-80 overflow-y-auto scrollbar-hide">
+                                <div class="flex gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+                                    </div>
+                                    <div class="glass rounded-2xl rounded-tl-sm px-4 py-3 max-w-[80%]">
+                                        <p class="text-sm text-gray-300">👋 Hi! I'm TechBot. I can help you find products, check inventory, or track your order. What are you looking for today?</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-3 justify-end">
+                                    <div class="bg-primary-600/30 rounded-2xl rounded-tr-sm px-4 py-3 max-w-[80%] border border-primary-500/20">
+                                        <p class="text-sm text-white">I need a laptop for video editing under $2000</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-3">
+                                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center flex-shrink-0">
+                                        <i data-lucide="bot" class="w-4 h-4 text-white"></i>
+                                    </div>
+                                    <div class="glass rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%] space-y-3">
+                                        <p class="text-sm text-gray-300">Perfect! Based on your needs, I recommend the <span class="text-accent-400 font-semibold">MacBook Pro 14" M3</span>. It's currently <span class="text-green-400 font-semibold">$1,899</span> (down from $2,099).</p>
+                                        <div class="flex items-center gap-2 p-2 rounded-lg bg-white/5">
+                                            <div class="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center">
+                                                <i data-lucide="laptop" class="w-6 h-6 text-gray-400"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-medium text-white">MacBook Pro 14" M3</p>
+                                                <p class="text-xs text-gray-500">32GB RAM • 512GB SSD</p>
+                                            </div>
+                                            <button class="px-3 py-1.5 rounded-lg bg-accent-600 text-white text-xs font-medium">Add to Cart</button>
+                                        </div>
+                                        <p class="text-xs text-gray-500">📦 In stock — Ships today</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="order-1 lg:order-2 reveal">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-500/10 border border-accent-500/20 text-accent-400 text-sm font-medium mb-6">
+                        <i data-lucide="store" class="w-4 h-4"></i>
+                        Shopify Integration
+                    </div>
+                    <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                        AI-Powered Commerce<br>
+                        <span class="gradient-text">That Converts</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                        Deploy intelligent shopping assistants that understand your catalog, manage inventory in real-time, and guide customers from discovery to checkout with personalized recommendations.
+                    </p>
+                    
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <div class="p-5 rounded-xl glass card-hover border border-white/5">
+                            <div class="w-12 h-12 rounded-xl bg-accent-500/20 flex items-center justify-center mb-4">
+                                <i data-lucide="message-square" class="w-6 h-6 text-accent-400"></i>
+                            </div>
+                            <h3 class="font-semibold text-white mb-2">Smart Chatbot</h3>
+                            <p class="text-sm text-gray-400">Natural language product search with intent classification and entity extraction.</p>
+                        </div>
+                        
+                        <div class="p-5 rounded-xl glass card-hover border border-white/5">
+                            <div class="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
+                                <i data-lucide="trending-up" class="w-6 h-6 text-primary-400"></i>
+                            </div>
+                            <h3 class="font-semibold text-white mb-2">Dynamic Pricing</h3>
+                            <p class="text-sm text-gray-400">AI-driven price optimization based on demand, inventory, and competitor analysis.</p>
+                        </div>
+                        
+                        <div class="p-5 rounded-xl glass card-hover border border-white/5">
+                            <div class="w-12 h-12 rounded-xl bg-accent-500/20 flex items-center justify-center mb-4">
+                                <i data-lucide="package" class="w-6 h-6 text-accent-400"></i>
+                            </div>
+                            <h3 class="font-semibold text-white mb-2">Inventory Sync</h3>
+                            <p class="text-sm text-gray-400">Real-time stock levels across all channels. Automatic low-stock alerts.</p>
+                        </div>
+                        
+                        <div class="p-5 rounded-xl glass card-hover border border-white/5">
+                            <div class="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center mb-4">
+                                <i data-lucide="sparkles" class="w-6 h-6 text-primary-400"></i>
+                            </div>
+                            <h3 class="font-semibold text-white mb-2">Auto Descriptions</h3>
+                            <p class="text-sm text-gray-400">Generate SEO-optimized product descriptions and meta tags automatically.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section id="solutions" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6">
+                    Everything You Need to <span class="gradient-text">Ship AI</span>
+                </h2>
+                <p class="text-gray-400 text-lg">
+                    From document ingestion to production deployment, we handle the infrastructure so you can focus on building.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="group p-8 rounded-2xl glass card-hover gradient-border reveal">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="zap" class="w-7 h-7 text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Sub-Second Latency</h3>
+                    <p class="text-gray-400 leading-relaxed">Edge-cached vector search with HNSW indexing. Global CDN ensures fast responses anywhere.</p>
+                </div>
+                
+                <div class="group p-8 rounded-2xl glass card-hover gradient-border reveal" style="transition-delay: 100ms;">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-500/20 to-accent-600/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="lock" class="w-7 h-7 text-accent-400"></i>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Enterprise Security</h3>
+                    <p class="text-gray-400 leading-relaxed">SOC 2 Type II certified. End-to-end encryption. Role-based access control and audit logs.</p>
+                </div>
+                
+                <div class="group p-8 rounded-2xl glass card-hover gradient-border reveal" style="transition-delay: 200ms;">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="scale" class="w-7 h-7 text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Auto-Scaling</h3>
+                    <p class="text-gray-400 leading-relaxed">From 1 to 1M requests. Kubernetes-native architecture scales horizontally with zero config.</p>
+                </div>
+                
+                <div class="group p-8 rounded-2xl glass card-hover gradient-border reveal">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-500/20 to-primary-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="code-2" class="w-7 h-7 text-accent-400"></i>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Developer First</h3>
+                    <p class="text-gray-400 leading-relaxed">RESTful APIs, webhooks, and SDKs for Python, TypeScript, and Go. Comprehensive docs.</p>
+                </div>
+                
+                <div class="group p-8 rounded-2xl glass card-hover gradient-border reveal" style="transition-delay: 100ms;">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500/20 to-primary-600/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="bar-chart-3" class="w-7 h-7 text-primary-400"></i>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">Analytics Dashboard</h3>
+                    <p class="text-gray-400 leading-relaxed">Real-time insights into query patterns, token usage, conversion rates, and AI performance.</p>
+                </div>
+                
+                <div class="group p-8 rounded-2xl glass card-hover gradient-border reveal" style="transition-delay: 200ms;">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent-500/20 to-accent-600/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i data-lucide="plug" class="w-7 h-7 text-accent-400"></i>
+                    </div>
+                    <h3 class="text-xl font-display font-bold text-white mb-3">100+ Integrations</h3>
+                    <p class="text-gray-400 leading-relaxed">Connect with Slack, Discord, Zendesk, HubSpot, Salesforce, and custom webhooks.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-primary-900/10 via-transparent to-accent-900/10"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6">
+                    From Data to <span class="gradient-text">Intelligence</span> in Minutes
+                </h2>
+            </div>
+            
+            <div class="relative">
+                <!-- Connection Line -->
+                <div class="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-primary-500/50 via-accent-500/50 to-primary-500/50 hidden lg:block"></div>
+                
+                <div class="grid md:grid-cols-3 gap-8 relative">
+                    <div class="text-center reveal">
+                        <div class="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-800 mb-6 shadow-lg shadow-primary-500/30 z-10">
+                            <span class="text-3xl font-display font-bold text-white">1</span>
+                            <div class="absolute -inset-2 bg-primary-500/20 rounded-2xl blur-lg"></div>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-white mb-3">Connect Data</h3>
+                        <p class="text-gray-400">Upload documents or connect your existing databases, cloud storage, or Shopify store.</p>
+                    </div>
+                    
+                    <div class="text-center reveal" style="transition-delay: 150ms;">
+                        <div class="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-accent-600 to-accent-800 mb-6 shadow-lg shadow-accent-500/30 z-10">
+                            <span class="text-3xl font-display font-bold text-white">2</span>
+                            <div class="absolute -inset-2 bg-accent-500/20 rounded-2xl blur-lg"></div>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-white mb-3">AI Processing</h3>
+                        <p class="text-gray-400">Automatic chunking, embedding, and indexing. Choose from OpenAI, Anthropic, or local models.</p>
+                    </div>
+                    
+                    <div class="text-center reveal" style="transition-delay: 300ms;">
+                        <div class="relative inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-primary-600 to-accent-600 mb-6 shadow-lg shadow-primary-500/30 z-10">
+                            <span class="text-3xl font-display font-bold text-white">3</span>
+                            <div class="absolute -inset-2 bg-gradient-to-r from-primary-500/20 to-accent-500/20 rounded-2xl blur-lg"></div>
+                        </div>
+                        <h3 class="text-xl font-display font-bold text-white mb-3">Deploy & Scale</h3>
+                        <p class="text-gray-400">One-click deployment to Render, Vercel, or AWS. Custom domains and SSL included.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-32 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-20 reveal">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6">
+                    Simple, Transparent <span class="gradient-text">Pricing</span>
+                </h2>
+                <p class="text-gray-400 text-lg">Start free, scale as you grow. No hidden fees, no surprises.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="p-8 rounded-2xl glass border border-white/5 reveal card-hover">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-300 mb-2">Starter</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-display font-bold text-white">$0</span>
+                            <span class="text-gray-500">/month</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">Perfect for prototyping and small projects.</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            1,000 queries/month
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            100 documents
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            Community support
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            Standard embeddings
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-colors">
+                        Get Started Free
+                    </button>
+                </div>
+                
+                <div class="relative p-8 rounded-2xl bg-gradient-to-b from-primary-900/50 to-accent-900/50 border border-primary-500/30 reveal card-hover transform md:-translate-y-4" style="transition-delay: 100ms;">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-primary-600 to-accent-600 text-white text-xs font-bold">
+                        MOST POPULAR
+                    </div>
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-300 mb-2">Professional</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-display font-bold text-white">$49</span>
+                            <span class="text-gray-500">/month</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">For growing teams and production workloads.</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-accent-400"></i>
+                            50,000 queries/month
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-accent-400"></i>
+                            Unlimited documents
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-accent-400"></i>
+                            Priority support
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-accent-400"></i>
+                            Advanced analytics
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-accent-400"></i>
+                            Shopify integration
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-gradient-to-r from-primary-600 to-accent-600 text-white font-medium hover:shadow-lg hover:shadow-primary-500/25 transition-all">
+                        Start 14-Day Trial
+                    </button>
+                </div>
+                
+                <div class="p-8 rounded-2xl glass border border-white/5 reveal card-hover" style="transition-delay: 200ms;">
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-300 mb-2">Enterprise</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-4xl font-display font-bold text-white">Custom</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">Dedicated infrastructure and SLA guarantees.</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            Unlimited everything
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            Dedicated support
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            Custom deployments
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            SSO & audit logs
+                        </li>
+                        <li class="flex items-center gap-3 text-sm text-gray-300">
+                            <i data-lucide="check" class="w-4 h-4 text-primary-400"></i>
+                            99.99% SLA
+                        </li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-colors">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-primary-900/30 to-accent-900/30"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-500/10 rounded-full blur-3xl"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10 reveal">
+            <h2 class="font-display text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                Ready to Build Something<br>
+                <span class="gradient-text">Intelligent?</span>
+            </h2>
+            <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
+                Join 500+ developers and businesses using NeuralSync to power their AI applications. Start free, no credit card required.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <button class="group px-8 py-4 rounded-full bg-gradient-to-r from-primary-600 to-accent-600 text-white font-semibold text-lg shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 transition-all duration-300 flex items-center gap-2">
+                    Start Building Free
+                    <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <button class="px-8 py-4 rounded-full glass text-white font-semibold text-lg hover:bg-white/5 transition-all duration-300">
+                    Schedule a Demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-black/40 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+                <div class="lg:col-span-2">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="relative w-10 h-10 flex items-center justify-center">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary-600 to-accent-600 rounded-xl"></div>
+                            <i data-lucide="brain-circuit" class="relative z-10 w-5 h-5 text-white"></i>
+                        </div>
+                        <span class="font-display font-bold text-xl text-white">
+                            Neural<span class="gradient-text">Sync</span>
+                        </span>
+                    </div>
+                    <p class="text-gray-400 mb-6 max-w-sm">
+                        Enterprise RAG and Shopify AI integration platform. Build intelligent applications with confidence.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all">
+                            <i data-lucide="github" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all">
+                            <i data-lucide="youtube" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Product</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">RAG Engine</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Shopify AI</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">API Reference</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Pricing</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Changelog</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Resources</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Documentation</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Tutorials</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Blog</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Community</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Status</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-white mb-4">Company</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">About</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Careers</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Contact</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Privacy</a></li>
+                        <li><a href="#" class="text-sm text-gray-400 hover:text-primary-400 transition-colors">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+                <p class="text-sm text-gray-500"> 2026 NeuralSync AI. All rights reserved.</p>
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    All systems operational
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Typing Effect
+        const texts = ["Understands Your Data", "Powers Your Store", "Scales Infinitely", "Ships in Minutes"];
+        let textIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingElement = document.getElementById('typing-text');
+
+        function typeEffect() {
+            const currentText = texts[textIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+
+        // Start typing effect
+        setTimeout(typeEffect, 1000);
+
+        // Scroll Reveal Animation
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar scroll effect
+        let lastScroll = 0;
+        const nav = document.querySelector('nav');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                nav.classList.add('shadow-lg', 'shadow-black/20');
+            } else {
+                nav.classList.remove('shadow-lg', 'shadow-black/20');
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Parallax effect for hero glow
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.querySelector('.hero-glow');
+            const x = (e.clientX / window.innerWidth - 0.5) * 30;
+            const y = (e.clientY / window.innerHeight - 0.5) * 30;
+            glow.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+        });
+    </script>
+</body>
+</html>

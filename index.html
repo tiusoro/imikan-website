@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, maximum-scale=5.0, maximum-scale=5.0">
     <title>Imikan Technologies — AI Solutions for Modern Business</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -65,6 +65,7 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            line-height: 1.6;
         }
         html { scroll-behavior: smooth; }
         .glass {
@@ -226,7 +227,7 @@
             mask-composite: exclude;
             pointer-events: none;
         }
-        img { transition: opacity 0.3s ease; }
+        img, video { max-width: 100%; height: auto; transition: opacity 0.3s ease; }
         a:focus-visible, button:focus-visible {
             outline: 2px solid #6366f1;
             outline-offset: 2px;
@@ -243,6 +244,9 @@
         @media print {
             .noise-overlay, .hero-glow, .mesh-bg { display: none !important; }
             body { background: white !important; color: black !important; }
+        }
+            @supports (padding: env(safe-area-inset-top)) {
+            body { padding-top: env(safe-area-inset-top); }
         }
     </style>
     <!-- Favicon & Thumbnail -->
@@ -295,8 +299,7 @@
             <a href="#docs" onclick="closeMobileMenu()" class="px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all font-medium">Docs</a>
             <a href="#pricing" onclick="closeMobileMenu()" class="px-4 py-3 rounded-xl text-gray-300 hover:text-white hover:bg-white/5 transition-all font-medium">Pricing</a>
             <div class="border-t border-white/10 my-4"></div>
-            <button class="w-full py-3 rounded-xl border border-white/10 text-gray-300 font-medium hover:bg-white/5 transition-all">Sign In</button>
-            <button class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-semibold hover:shadow-lg hover:shadow-brand-500/25 transition-all mt-2">Get Started</button>
+            <button class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-semibold hover:shadow-lg hover:shadow-brand-500/25 transition-all">Get Started</button>
         </nav>
     </div>
 
@@ -321,7 +324,6 @@
                     <a href="#pricing" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Pricing</a>
                 </div>
                 <div class="hidden lg:flex items-center gap-3 xl:gap-4">
-                    <button class="text-sm font-medium text-gray-300 hover:text-white transition-colors px-3 py-2">Sign In</button>
                     <button class="btn-shine relative px-5 py-2.5 rounded-full bg-gradient-to-r from-brand-600 to-accent-600 text-white text-sm font-semibold hover:shadow-lg hover:shadow-brand-500/30 transition-all duration-300">Get Started</button>
                 </div>
                 <button onclick="openMobileMenu()" class="lg:hidden w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white transition-colors" aria-label="Open menu">
@@ -350,12 +352,8 @@
             <p class="max-w-xl sm:max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-400 mb-8 sm:mb-12 leading-relaxed px-4 reveal" style="transition-delay: 200ms;">
                 Enterprise-grade RAG pipelines and Shopify AI automations. Transform unstructured data into actionable intelligence with sub-second latency.
             </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 reveal px-4" style="transition-delay: 300ms;">
-                <button class="btn-shine group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-brand-600 to-accent-600 text-white font-semibold text-base sm:text-lg shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transition-all duration-300 flex items-center justify-center gap-2">
-                    Start Building Free
-                    <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform"></i>
-                </button>
-                <button class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full glass text-white font-semibold text-base sm:text-lg hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-2">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 reveal px-4 w-full max-w-md mx-auto sm:max-w-none" style="transition-delay: 300ms;">
+                <button onclick="openVideoModal()" class="btn-shine group w-full px-6 sm:px-8 py-3.5 sm:py-4 rounded-full glass text-white font-semibold text-base sm:text-lg hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-2 min-h-[52px] sm:min-h-[56px]">
                     <i data-lucide="play-circle" class="w-4 h-4 sm:w-5 sm:h-5 text-brand-400"></i>
                     Watch Demo
                 </button>
@@ -687,18 +685,39 @@ response = <span class="text-purple-400">await</span> pipeline.query(
         </div>
     </section>
 
-    <!-- Pricing -->
+        <!-- Pricing -->
     <section id="pricing" class="py-20 sm:py-28 md:py-32 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16 md:mb-20 reveal">
+            <div class="text-center max-w-3xl mx-auto mb-8 sm:mb-12 reveal">
                 <h2 class="font-display section-title font-bold text-white mb-4 sm:mb-6">
                     Simple, Transparent <span class="gradient-text">Pricing</span>
                 </h2>
-                <p class="text-gray-400 text-base sm:text-lg px-4">Start free, scale as you grow. No hidden fees, no surprises.</p>
+                <p class="text-gray-400 text-base sm:text-lg px-4">Choose your solution. Start free, scale as you grow.</p>
             </div>
-            <div class="grid md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
+
+            <!-- Toggle Switch -->
+            <div class="flex items-center justify-center gap-3 sm:gap-4 mb-10 sm:mb-14 reveal">
+                <button id="rag-toggle" onclick="switchPricing('rag')" class="toggle-btn active flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 min-w-[100px] sm:min-w-[120px] justify-center">
+                    <i data-lucide="database" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <span>RAG</span>
+                </button>
+                <div class="w-12 h-6 sm:w-14 sm:h-7 rounded-full bg-white/10 relative cursor-pointer" onclick="toggleSwitch()">
+                    <div id="toggle-knob" class="absolute top-0.5 left-0.5 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-r from-brand-500 to-accent-500 transition-all duration-300 shadow-lg"></div>
+                </div>
+                <button id="chatbot-toggle" onclick="switchPricing('chatbot')" class="toggle-btn flex items-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all duration-300 min-w-[100px] sm:min-w-[120px] justify-center">
+                    <i data-lucide="message-square" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                    <span>AI Chatbot</span>
+                </button>
+            </div>
+
+            <!-- RAG Pricing Cards -->
+            <div id="rag-pricing" class="grid md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto">
                 <div class="p-6 sm:p-8 rounded-xl sm:rounded-2xl glass border border-white/5 reveal card-hover flex flex-col">
                     <div class="mb-4 sm:mb-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="database" class="w-4 h-4 sm:w-5 sm:h-5 text-brand-400"></i>
+                            <span class="text-xs text-brand-400 font-medium uppercase tracking-wider">RAG</span>
+                        </div>
                         <h3 class="text-base sm:text-lg font-semibold text-gray-300 mb-2">Starter</h3>
                         <div class="flex items-baseline gap-1">
                             <span class="text-3xl sm:text-4xl font-display font-bold text-white">$0</span>
@@ -712,11 +731,16 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                         <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>Community support</li>
                         <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>Standard embeddings</li>
                     </ul>
-                    <button class="w-full py-2.5 sm:py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm sm:text-base">Get Started Free</button>
+                    <button onclick="openForm('RAG Starter')" class="w-full py-2.5 sm:py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm sm:text-base min-h-[44px] sm:min-h-[48px]">Get Started</button>
                 </div>
+
                 <div class="relative p-6 sm:p-8 rounded-xl sm:rounded-2xl pricing-highlight reveal card-hover transform md:-translate-y-4 flex flex-col">
                     <div class="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 rounded-full bg-gradient-to-r from-brand-600 to-accent-600 text-white text-[10px] sm:text-xs font-bold whitespace-nowrap">MOST POPULAR</div>
                     <div class="mb-4 sm:mb-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="database" class="w-4 h-4 sm:w-5 sm:h-5 text-brand-400"></i>
+                            <span class="text-xs text-brand-400 font-medium uppercase tracking-wider">RAG</span>
+                        </div>
                         <h3 class="text-base sm:text-lg font-semibold text-gray-300 mb-2">Professional</h3>
                         <div class="flex items-baseline gap-1">
                             <span class="text-3xl sm:text-4xl font-display font-bold text-white">$49</span>
@@ -729,12 +753,17 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                         <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Unlimited documents</li>
                         <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Priority support</li>
                         <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Advanced analytics</li>
-                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Shopify integration</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Source attribution</li>
                     </ul>
-                    <button class="btn-shine w-full py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-medium hover:shadow-lg hover:shadow-brand-500/25 transition-all text-sm sm:text-base">Start 14-Day Trial</button>
+                    <button onclick="openForm('RAG Professional')" class="btn-shine w-full py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-medium hover:shadow-lg hover:shadow-brand-500/25 transition-all text-sm sm:text-base min-h-[44px] sm:min-h-[48px]">Get Started</button>
                 </div>
+
                 <div class="p-6 sm:p-8 rounded-xl sm:rounded-2xl glass border border-white/5 reveal card-hover flex flex-col">
                     <div class="mb-4 sm:mb-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="database" class="w-4 h-4 sm:w-5 sm:h-5 text-brand-400"></i>
+                            <span class="text-xs text-brand-400 font-medium uppercase tracking-wider">RAG</span>
+                        </div>
                         <h3 class="text-base sm:text-lg font-semibold text-gray-300 mb-2">Enterprise</h3>
                         <div class="flex items-baseline gap-1">
                             <span class="text-3xl sm:text-4xl font-display font-bold text-white">Custom</span>
@@ -748,13 +777,84 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                         <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>SSO & audit logs</li>
                         <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>99.99% SLA</li>
                     </ul>
-                    <button class="w-full py-2.5 sm:py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm sm:text-base">Contact Sales</button>
+                    <button onclick="openForm('RAG Enterprise')" class="w-full py-2.5 sm:py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm sm:text-base min-h-[44px] sm:min-h-[48px]">Get Started</button>
+                </div>
+            </div>
+
+            <!-- Chatbot Pricing Cards -->
+            <div id="chatbot-pricing" class="grid md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-6xl mx-auto hidden">
+                <div class="p-6 sm:p-8 rounded-xl sm:rounded-2xl glass border border-white/5 reveal card-hover flex flex-col">
+                    <div class="mb-4 sm:mb-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="message-square" class="w-4 h-4 sm:w-5 sm:h-5 text-accent-400"></i>
+                            <span class="text-xs text-accent-400 font-medium uppercase tracking-wider">AI Chatbot</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-semibold text-gray-300 mb-2">Starter</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-3xl sm:text-4xl font-display font-bold text-white">$0</span>
+                            <span class="text-gray-500 text-sm">/month</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 sm:mb-6">Perfect for small stores and prototyping.</p>
+                    <ul class="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8 flex-1">
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>500 conversations/month</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>1 Shopify store</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Basic product Q&A</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Community support</li>
+                    </ul>
+                    <button onclick="openForm('AI Chatbot Starter')" class="w-full py-2.5 sm:py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm sm:text-base min-h-[44px] sm:min-h-[48px]">Get Started</button>
+                </div>
+
+                <div class="relative p-6 sm:p-8 rounded-xl sm:rounded-2xl pricing-highlight reveal card-hover transform md:-translate-y-4 flex flex-col">
+                    <div class="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1 rounded-full bg-gradient-to-r from-brand-600 to-accent-600 text-white text-[10px] sm:text-xs font-bold whitespace-nowrap">MOST POPULAR</div>
+                    <div class="mb-4 sm:mb-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="message-square" class="w-4 h-4 sm:w-5 sm:h-5 text-accent-400"></i>
+                            <span class="text-xs text-accent-400 font-medium uppercase tracking-wider">AI Chatbot</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-semibold text-gray-300 mb-2">Professional</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-3xl sm:text-4xl font-display font-bold text-white">$49</span>
+                            <span class="text-gray-500 text-sm">/month</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 sm:mb-6">For growing stores and serious sellers.</p>
+                    <ul class="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8 flex-1">
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>25,000 conversations/month</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>5 Shopify stores</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>Order tracking & inventory</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>Priority support</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-brand-400 flex-shrink-0"></i>Custom branding</li>
+                    </ul>
+                    <button onclick="openForm('AI Chatbot Professional')" class="btn-shine w-full py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-medium hover:shadow-lg hover:shadow-brand-500/25 transition-all text-sm sm:text-base min-h-[44px] sm:min-h-[48px]">Get Started</button>
+                </div>
+
+                <div class="p-6 sm:p-8 rounded-xl sm:rounded-2xl glass border border-white/5 reveal card-hover flex flex-col">
+                    <div class="mb-4 sm:mb-6">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="message-square" class="w-4 h-4 sm:w-5 sm:h-5 text-accent-400"></i>
+                            <span class="text-xs text-accent-400 font-medium uppercase tracking-wider">AI Chatbot</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-semibold text-gray-300 mb-2">Enterprise</h3>
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-3xl sm:text-4xl font-display font-bold text-white">Custom</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4 sm:mb-6">Dedicated infrastructure for large-scale commerce.</p>
+                    <ul class="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8 flex-1">
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Unlimited conversations</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Unlimited stores</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>Custom AI training</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>White-label solution</li>
+                        <li class="flex items-center gap-2.5 sm:gap-3 text-sm text-gray-300"><i data-lucide="check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent-400 flex-shrink-0"></i>99.99% SLA</li>
+                    </ul>
+                    <button onclick="openForm('AI Chatbot Enterprise')" class="w-full py-2.5 sm:py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm sm:text-base min-h-[44px] sm:min-h-[48px]">Get Started</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
+<!-- CTA Section -->
     <section class="py-20 sm:py-28 md:py-32 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-r from-brand-900/25 to-accent-900/25 pointer-events-none"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[800px] h-[500px] sm:h-[800px] bg-brand-500/8 rounded-full blur-3xl pointer-events-none"></div>
@@ -766,20 +866,16 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             <p class="text-gray-400 text-base sm:text-lg md:text-xl mb-8 sm:mb-10 max-w-2xl mx-auto px-4">
                 Join 500+ developers and businesses using Imikan Technologies to power their AI applications. Start free, no credit card required.
             </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4">
-                <button class="btn-shine group w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-brand-600 to-accent-600 text-white font-semibold text-base sm:text-lg shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transition-all duration-300 flex items-center justify-center gap-2">
-                    Start Building Free
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4 w-full max-w-md mx-auto sm:max-w-none">
+                <button onclick="openDemoForm()" class="btn-shine group w-full px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-brand-600 to-accent-600 text-white font-semibold text-base sm:text-lg shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transition-all duration-300 flex items-center justify-center gap-2 min-h-[52px] sm:min-h-[56px]">
+                    Schedule a Demonstration
                     <i data-lucide="arrow-right" class="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform"></i>
                 </button>
-                <button class="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-full glass text-white font-semibold text-base sm:text-lg hover:bg-white/5 transition-all duration-300">Schedule a Demo</button>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="border-t border-white/5 bg-black/40 pt-12 sm:pt-16 md:pt-20 pb-8 sm:pb-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
+    -cols-5 gap-8 sm:gap-10 lg:gap-12 mb-12 sm:mb-16">
                 <div class="col-span-2 lg:col-span-2">
                     <div class="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                         <div class="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center overflow-hidden rounded-lg bg-white/5">
@@ -950,6 +1046,502 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             }
         });
     </script>
+
+    <!-- Video Modal -->
+    <div id="video-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300" onclick="closeVideoModal()"></div>
+    <div id="video-modal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 hidden">
+        <div class="relative w-full max-w-4xl bg-[#111122] rounded-2xl border border-white/10 shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="video-container">
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 z-10 w-8 h-8 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white transition-colors" aria-label="Close video">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="aspect-video bg-black flex items-center justify-center">
+                <video id="demo-video" class="w-full h-full" controls poster="imikan-logo.png">
+                    <source src="demo-video.mp4" type="video/mp4">
+                    <p class="text-gray-400 text-center p-8">Your browser does not support the video tag. Please upload a video file named "demo-video.mp4" to the root directory.</p>
+                </video>
+            </div>
+            <div class="p-4 sm:p-6 border-t border-white/5">
+                <h4 class="font-display font-bold text-white text-lg">Imikan Technologies Demo</h4>
+                <p class="text-gray-400 text-sm mt-1">See how our RAG and AI Chatbot solutions work in action.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Schedule Form Modal -->
+    <div id="demo-form-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300" onclick="closeDemoForm()"></div>
+    <div id="demo-form-modal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 hidden">
+        <div class="relative w-full max-w-lg bg-[#111122] rounded-2xl border border-white/10 shadow-2xl shadow-brand-500/10 transform scale-95 opacity-0 transition-all duration-300" id="demo-form-container">
+            <button onclick="closeDemoForm()" class="absolute top-4 right-4 w-8 h-8 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white transition-colors z-10" aria-label="Close form">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="p-6 sm:p-8">
+                <div class="mb-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent-500/10 border border-accent-500/20 text-accent-400 text-xs font-medium mb-3">
+                        <i data-lucide="calendar" class="w-3 h-3"></i>
+                        Schedule a Demonstration
+                    </div>
+                    <h3 class="font-display text-xl sm:text-2xl font-bold text-white mb-2">Book Your Demo</h3>
+                    <p class="text-gray-400 text-sm">Tell us about your needs and we will schedule a personalized walkthrough.</p>
+                </div>
+                <form id="demo-schedule-form" onsubmit="handleDemoFormSubmit(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="demo-name" class="block text-sm font-medium text-gray-300 mb-1.5">Full Name</label>
+                            <input type="text" id="demo-name" name="name" required 
+                                class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/50 transition-all text-sm"
+                                placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label for="demo-email" class="block text-sm font-medium text-gray-300 mb-1.5">Email Address</label>
+                            <input type="email" id="demo-email" name="email" required 
+                                class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/50 transition-all text-sm"
+                                placeholder="john@company.com">
+                        </div>
+                        <div>
+                            <label for="demo-phone" class="block text-sm font-medium text-gray-300 mb-1.5">Phone Number</label>
+                            <input type="tel" id="demo-phone" name="phone" required 
+                                class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/50 transition-all text-sm"
+                                placeholder="+1 (555) 000-0000">
+                        </div>
+                        <div>
+                            <label for="demo-description" class="block text-sm font-medium text-gray-300 mb-1.5">What are you looking for?</label>
+                            <textarea id="demo-description" name="description" rows="4" required 
+                                class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/50 transition-all text-sm resize-none"
+                                placeholder="Tell us about your business, current challenges, and what you hope to achieve with AI..."></textarea>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" id="demo-submit-btn" class="btn-shine w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-semibold hover:shadow-lg hover:shadow-brand-500/25 transition-all flex items-center justify-center gap-2">
+                            <span id="demo-submit-text">Schedule Demo</span>
+                            <i data-lucide="calendar-check" class="w-4 h-4" id="demo-submit-icon"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 text-center mt-4">
+                        Your information will be sent to <span class="text-accent-400">tiusoro@gmail.com</span>
+                    </p>
+                </form>
+                <div id="demo-form-success" class="hidden text-center py-8">
+                    <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="check-circle" class="w-8 h-8 text-green-400"></i>
+                    </div>
+                    <h4 class="text-xl font-display font-bold text-white mb-2">Demo Requested!</h4>
+                    <p class="text-gray-400 text-sm mb-6">Thank you for your interest. Our team will review your request and reach out to <span class="text-accent-400">tiusoro@gmail.com</span> within 24 hours to schedule your demo.</p>
+                    <button onclick="closeDemoForm()" class="px-6 py-2.5 rounded-xl glass text-white font-medium hover:bg-white/5 transition-all">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pricing Contact Form Modal -->
+    <div id="form-overlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] hidden opacity-0 transition-opacity duration-300" onclick="closeForm()"></div>
+    <div id="contact-form-modal" class="fixed inset-0 z-[70] flex items-center justify-center p-4 hidden">
+        <div class="relative w-full max-w-lg bg-[#111122] rounded-2xl border border-white/10 shadow-2xl shadow-brand-500/10 transform scale-95 opacity-0 transition-all duration-300" id="form-container">
+            <button onclick="closeForm()" class="absolute top-4 right-4 w-8 h-8 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white transition-colors z-10" aria-label="Close form">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <div class="p-6 sm:p-8">
+                <div class="mb-6">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs font-medium mb-3">
+                        <i data-lucide="send" class="w-3 h-3"></i>
+                        Get Started
+                    </div>
+                    <h3 id="form-title" class="font-display text-xl sm:text-2xl font-bold text-white mb-2">Get Started</h3>
+                    <p class="text-gray-400 text-sm">Fill out the form below and our team will reach out within 24 hours.</p>
+                </div>
+                <form id="contact-form" onsubmit="handleFormSubmit(event)">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="form-name" class="block text-sm font-medium text-gray-300 mb-1.5">Full Name</label>
+                            <input type="text" id="form-name" name="name" required 
+                                class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all text-sm"
+                                placeholder="John Doe">
+                        </div>
+                        <div>
+                            <label for="form-email" class="block text-sm font-medium text-gray-300 mb-1.5">Email Address</label>
+                            <input type="email" id="form-email" name="email" required 
+                                class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all text-sm"
+                                placeholder="john@company.com">
+                        </div>
+                        <div>
+                            <label for="form-phone" class="block text-sm font-medium text-gray-300 mb-1.5">Phone Number</label>
+                            <input type="tel" id="form-phone" name="phone" required 
+                                class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all text-sm"
+                                placeholder="+1 (555) 000-0000">
+                        </div>
+                        <div>
+                            <label for="form-description" class="block text-sm font-medium text-gray-300 mb-1.5">Project Description</label>
+                            <textarea id="form-description" name="description" rows="4" required 
+                                class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all text-sm resize-none"
+                                placeholder="Tell us about your project, requirements, and timeline..."></textarea>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button type="submit" id="submit-btn" class="btn-shine w-full py-3 rounded-xl bg-gradient-to-r from-brand-600 to-accent-600 text-white font-semibold hover:shadow-lg hover:shadow-brand-500/25 transition-all flex items-center justify-center gap-2">
+                            <span id="submit-text">Send Inquiry</span>
+                            <i data-lucide="send" class="w-4 h-4" id="submit-icon"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 text-center mt-4">
+                        Your information will be sent to <span class="text-brand-400">tiusoro@gmail.com</span>
+                    </p>
+                </form>
+                <div id="form-success" class="hidden text-center py-8">
+                    <div class="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="check-circle" class="w-8 h-8 text-green-400"></i>
+                    </div>
+                    <h4 class="text-xl font-display font-bold text-white mb-2">Message Sent!</h4>
+                    <p class="text-gray-400 text-sm mb-6">Thank you for your interest. Our team will review your inquiry and reach out to <span class="text-brand-400">tiusoro@gmail.com</span> within 24 hours.</p>
+                    <button onclick="closeForm()" class="px-6 py-2.5 rounded-xl glass text-white font-medium hover:bg-white/5 transition-all">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Mobile Menu
+        function openMobileMenu() {
+            document.getElementById('mobile-menu').classList.add('open');
+            document.getElementById('mobile-overlay').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.remove('open');
+            document.getElementById('mobile-overlay').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Pricing Toggle
+        let currentPricing = 'rag';
+        function switchPricing(type) {
+            currentPricing = type;
+            const ragBtn = document.getElementById('rag-toggle');
+            const chatbotBtn = document.getElementById('chatbot-toggle');
+            const ragCards = document.getElementById('rag-pricing');
+            const chatbotCards = document.getElementById('chatbot-pricing');
+            const knob = document.getElementById('toggle-knob');
+            if (type === 'rag') {
+                ragBtn.classList.add('active');
+                ragBtn.classList.remove('text-gray-400');
+                ragBtn.classList.add('text-white', 'bg-brand-600/20');
+                chatbotBtn.classList.remove('active');
+                chatbotBtn.classList.add('text-gray-400');
+                chatbotBtn.classList.remove('text-white', 'bg-accent-600/20');
+                ragCards.classList.remove('hidden');
+                chatbotCards.classList.add('hidden');
+                knob.style.transform = 'translateX(0)';
+            } else {
+                chatbotBtn.classList.add('active');
+                chatbotBtn.classList.remove('text-gray-400');
+                chatbotBtn.classList.add('text-white', 'bg-accent-600/20');
+                ragBtn.classList.remove('active');
+                ragBtn.classList.add('text-gray-400');
+                ragBtn.classList.remove('text-white', 'bg-brand-600/20');
+                chatbotCards.classList.remove('hidden');
+                ragCards.classList.add('hidden');
+                knob.style.transform = 'translateX(100%)';
+            }
+            setTimeout(() => {
+                const visibleCards = document.querySelectorAll('#' + type + '-pricing .reveal');
+                visibleCards.forEach((card, i) => {
+                    card.classList.remove('active');
+                    setTimeout(() => card.classList.add('active'), i * 100);
+                });
+            }, 50);
+        }
+        function toggleSwitch() {
+            switchPricing(currentPricing === 'rag' ? 'chatbot' : 'rag');
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const ragBtn = document.getElementById('rag-toggle');
+            if (ragBtn) {
+                ragBtn.classList.add('text-white', 'bg-brand-600/20');
+            }
+        });
+
+        // Video Modal
+        function openVideoModal() {
+            const overlay = document.getElementById('video-overlay');
+            const modal = document.getElementById('video-modal');
+            const container = document.getElementById('video-container');
+            const video = document.getElementById('demo-video');
+            overlay.classList.remove('hidden');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            if (video) video.play();
+            lucide.createIcons();
+        }
+        function closeVideoModal() {
+            const overlay = document.getElementById('video-overlay');
+            const modal = document.getElementById('video-modal');
+            const container = document.getElementById('video-container');
+            const video = document.getElementById('demo-video');
+            if (video) { video.pause(); video.currentTime = 0; }
+            overlay.classList.add('opacity-0');
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        // Demo Schedule Form
+        function openDemoForm() {
+            const overlay = document.getElementById('demo-form-overlay');
+            const modal = document.getElementById('demo-form-modal');
+            const container = document.getElementById('demo-form-container');
+            const form = document.getElementById('demo-schedule-form');
+            const success = document.getElementById('demo-form-success');
+            form.classList.remove('hidden');
+            success.classList.add('hidden');
+            form.reset();
+            overlay.classList.remove('hidden');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            lucide.createIcons();
+        }
+        function closeDemoForm() {
+            const overlay = document.getElementById('demo-form-overlay');
+            const modal = document.getElementById('demo-form-modal');
+            const container = document.getElementById('demo-form-container');
+            overlay.classList.add('opacity-0');
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        function handleDemoFormSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('demo-name').value;
+            const email = document.getElementById('demo-email').value;
+            const phone = document.getElementById('demo-phone').value;
+            const description = document.getElementById('demo-description').value;
+            const submitBtn = document.getElementById('demo-submit-btn');
+            const submitText = document.getElementById('demo-submit-text');
+            const submitIcon = document.getElementById('demo-submit-icon');
+            submitBtn.disabled = true;
+            submitText.textContent = 'Sending...';
+            submitIcon.classList.add('animate-spin');
+            const subject = encodeURIComponent('Demo Request: ' + name);
+            const body = encodeURIComponent(
+                'Demo Schedule Request
+
+' +
+                'Name: ' + name + '
+' +
+                'Email: ' + email + '
+' +
+                'Phone: ' + phone + '
+
+' +
+                'What they are looking for:
+' + description + '
+
+' +
+                '---
+Sent from Imikan Technologies website - Schedule a Demonstration'
+            );
+            window.location.href = 'mailto:tiusoro@gmail.com?subject=' + subject + '&body=' + body;
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitText.textContent = 'Schedule Demo';
+                submitIcon.classList.remove('animate-spin');
+                document.getElementById('demo-schedule-form').classList.add('hidden');
+                document.getElementById('demo-form-success').classList.remove('hidden');
+                lucide.createIcons();
+            }, 1500);
+        }
+
+        // Pricing Contact Form
+        function openForm(planName) {
+            const overlay = document.getElementById('form-overlay');
+            const modal = document.getElementById('contact-form-modal');
+            const container = document.getElementById('form-container');
+            const title = document.getElementById('form-title');
+            const form = document.getElementById('contact-form');
+            const success = document.getElementById('form-success');
+            title.textContent = planName;
+            form.classList.remove('hidden');
+            success.classList.add('hidden');
+            form.reset();
+            overlay.classList.remove('hidden');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                overlay.classList.remove('opacity-0');
+                container.classList.remove('scale-95', 'opacity-0');
+                container.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            lucide.createIcons();
+        }
+        function closeForm() {
+            const overlay = document.getElementById('form-overlay');
+            const modal = document.getElementById('contact-form-modal');
+            const container = document.getElementById('form-container');
+            overlay.classList.add('opacity-0');
+            container.classList.remove('scale-100', 'opacity-100');
+            container.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('form-name').value;
+            const email = document.getElementById('form-email').value;
+            const phone = document.getElementById('form-phone').value;
+            const description = document.getElementById('form-description').value;
+            const plan = document.getElementById('form-title').textContent;
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            const submitIcon = document.getElementById('submit-icon');
+            submitBtn.disabled = true;
+            submitText.textContent = 'Sending...';
+            submitIcon.classList.add('animate-spin');
+            const subject = encodeURIComponent('New Inquiry: ' + plan + ' - ' + name);
+            const body = encodeURIComponent(
+                'Plan: ' + plan + '
+
+' +
+                'Name: ' + name + '
+' +
+                'Email: ' + email + '
+' +
+                'Phone: ' + phone + '
+
+' +
+                'Project Description:
+' + description + '
+
+' +
+                '---
+Sent from Imikan Technologies website'
+            );
+            window.location.href = 'mailto:tiusoro@gmail.com?subject=' + subject + '&body=' + body;
+            setTimeout(() => {
+                submitBtn.disabled = false;
+                submitText.textContent = 'Send Inquiry';
+                submitIcon.classList.remove('animate-spin');
+                document.getElementById('contact-form').classList.add('hidden');
+                document.getElementById('form-success').classList.remove('hidden');
+                lucide.createIcons();
+            }, 1500);
+        }
+
+        // Typing Effect
+        const texts = ["Understands Your Data", "Powers Your Store", "Scales Infinitely", "Ships in Minutes"];
+        let textIndex = 0, charIndex = 0, isDeleting = false;
+        const typingElement = document.getElementById('typing-text');
+        function typeEffect() {
+            const currentText = texts[textIndex];
+            if (isDeleting) {
+                typingElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            let typeSpeed = isDeleting ? 50 : 100;
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                textIndex = (textIndex + 1) % texts.length;
+                typeSpeed = 500;
+            }
+            setTimeout(typeEffect, typeSpeed);
+        }
+        setTimeout(typeEffect, 1000);
+
+        // Scroll Reveal
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -50px 0px',
+            threshold: 0.1
+        };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Navbar scroll
+        const nav = document.getElementById('navbar');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 50) {
+                nav.classList.add('shadow-lg', 'shadow-black/20');
+            } else {
+                nav.classList.remove('shadow-lg', 'shadow-black/20');
+            }
+            lastScroll = currentScroll;
+        });
+
+        // Hero glow parallax (desktop only)
+        const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+        if (!isTouchDevice) {
+            document.addEventListener('mousemove', (e) => {
+                const glow = document.getElementById('hero-glow');
+                if (glow) {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 30;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 30;
+                    glow.style.transform = 'translate(calc(-50% + ' + x + 'px), calc(-50% + ' + y + 'px))';
+                }
+            });
+        }
+
+        // Close mobile menu on resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                closeMobileMenu();
+            }
+        });
+
+        // Keyboard: Escape closes all
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeMobileMenu();
+                closeForm();
+                closeVideoModal();
+                closeDemoForm();
+            }
+        });
+    </script>
+
 </body>
 </html>
-

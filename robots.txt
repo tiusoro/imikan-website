@@ -1,0 +1,32 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://www.imikan-technologies.com/sitemap.xml
+
+# Crawl rate
+Crawl-delay: 1
+
+# Disallow admin or private paths (if any)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Allow Googlebot full access
+User-agent: Googlebot
+Allow: /
+
+# Allow Bingbot full access
+User-agent: Bingbot
+Allow: /
+
+# Allow DuckDuckBot
+User-agent: DuckDuckBot
+Allow: /
+
+# Allow Yandex
+User-agent: Yandex
+Allow: /
+
+# Allow Baidu
+User-agent: Baiduspider
+Allow: /

@@ -1480,6 +1480,11 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                     setTimeout(() => card.classList.add('active'), i * 100);
                 });
             }, 50);
+            // ... existing code ...
+            gtag('event', 'pricing_toggle', {
+                'event_category': 'engagement',
+                'event_label': type
+            });
         }
         function toggleSwitch() {
             switchPricing(currentPricing === 'rag' ? 'chatbot' : 'rag');
@@ -1506,6 +1511,13 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                 container.classList.remove('scale-95', 'opacity-0');
                 container.classList.add('scale-100', 'opacity-100');
             }, 10);
+
+            // ... existing code ...
+            gtag('event', 'video_play', {
+                'event_category': 'engagement',
+                'event_label': 'demo_video'
+            });
+
             lucide.createIcons();
         }
 
@@ -1678,6 +1690,14 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                 if (response.ok) {
                     const data = await response.json();
                     showToast('Demo request submitted successfully!', 'success');
+                    // Google Analytics event tracking
+                    gtag('event', 'demo_request', {
+                        'event_category': 'form',
+                        'event_label': 'demo_schedule',
+                        'value': 1
+                    });
+                    // End google analytics event tracking tagging
+
                     document.getElementById('demo-schedule-form').classList.add('hidden');
                     document.getElementById('demo-form-success').classList.remove('hidden');
                     lucide.createIcons();
@@ -1773,6 +1793,12 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                 if (response.ok) {
                     const data = await response.json();
                     showToast('Inquiry submitted successfully!', 'success');
+                    gtag('event', 'pricing_inquiry', {
+                        'event_category': 'form',
+                        'event_label': document.getElementById('form-title').textContent,
+                        'value': 1
+                    });
+
                     document.getElementById('contact-form').classList.add('hidden');
                     document.getElementById('form-success').classList.remove('hidden');
                     lucide.createIcons();

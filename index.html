@@ -369,6 +369,42 @@
         @supports (padding: env(safe-area-inset-top)) { body { padding-top: env(safe-area-inset-top); } }
         .toast { position: fixed; bottom: 24px; right: 24px; z-index: 100; transform: translateY(100px); opacity: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .toast.show { transform: translateY(0); opacity: 1; }
+
+        /* ===== Mobile optimization additions ===== */
+
+        /* Frozen "Feature" column for the RAG / AI Chatbot Deliverables comparison tables.
+           Works on all screen sizes but is most useful once the table scrolls horizontally on phones. */
+        .deliverables-table { border-collapse: separate; border-spacing: 0; }
+        .deliverables-table th:first-child,
+        .deliverables-table td:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            background: var(--bg-deep);
+            box-shadow: 3px 0 8px rgba(0,0,0,0.45);
+        }
+        .deliverables-table thead th:first-child { z-index: 3; }
+        @media (max-width: 639px) {
+            .deliverables-table { font-size: 0.75rem; }
+            .deliverables-table th:first-child,
+            .deliverables-table td:first-child { min-width: 132px; max-width: 132px; white-space: normal; padding-left: 0.75rem; padding-right: 0.5rem; }
+            .deliverables-table th:not(:first-child),
+            .deliverables-table td:not(:first-child) { min-width: 84px; padding-left: 0.5rem; padding-right: 0.5rem; }
+        }
+
+        /* rag_pipeline.py code block: keep it readable without overflowing small phones */
+        @media (max-width: 400px) {
+            .code-block pre { font-size: 11px; line-height: 1.55; }
+            .code-block { padding: 0.875rem !important; }
+        }
+
+        /* TechBot product card: stack info + Add to Cart so nothing gets squeezed on narrow phones (e.g. Galaxy S22) */
+        @media (max-width: 400px) {
+            .techbot-product-card { flex-wrap: wrap; row-gap: 0.5rem; }
+            .techbot-product-card .techbot-icon { order: 1; }
+            .techbot-product-card .techbot-info { order: 2; flex-basis: calc(100% - 3.25rem); }
+            .techbot-product-card .techbot-add-btn { order: 3; width: 100%; text-align: center; }
+        }
     </style>
 
     <base target="_blank">
@@ -538,7 +574,7 @@ window.addEventListener('load', function() {
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-brand-500/20 flex items-center justify-center flex-shrink-0">
                                 <svg class="lucide lucide-file-text w-4 h-4 sm:w-5 sm:h-5 text-brand-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /> <path d="M14 2v4a2 2 0 0 0 2 2h4" /> <path d="M10 9H8" /> <path d="M16 13H8" /> <path d="M16 17H8" /></svg>
                             </div>
-                            <div>
+                            <div class="flex-1 min-w-0">
                                 <h3 class="font-semibold text-white text-sm sm:text-base mb-0.5 sm:mb-1">Multi-Format Ingestion</h3>
                                 <p class="text-xs sm:text-sm text-gray-400">PDF, Word, Excel, Markdown, and HTML documents. Automatic OCR for scanned documents. Perfect for enterprise knowledge base AI and document intelligence in Nigeria and Africa.</p>
                             </div>
@@ -547,7 +583,7 @@ window.addEventListener('load', function() {
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-accent-500/20 flex items-center justify-center flex-shrink-0">
                                 <svg class="lucide lucide-git-branch w-4 h-4 sm:w-5 sm:h-5 text-accent-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" x2="6" y1="3" y2="15" /> <circle cx="18" cy="6" r="3" /> <circle cx="6" cy="18" r="3" /> <path d="M18 9a9 9 0 0 1-9 9" /></svg>
                             </div>
-                            <div>
+                            <div class="flex-1 min-w-0">
                                 <h3 class="font-semibold text-white text-sm sm:text-base mb-0.5 sm:mb-1">Smart Chunking</h3>
                                 <p class="text-xs sm:text-sm text-gray-400">Semantic chunking with intelligent overlap preservation. Maintains context across document boundaries using advanced NLP and natural language processing techniques.</p>
                             </div>
@@ -556,7 +592,7 @@ window.addEventListener('load', function() {
                             <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-brand-500/20 flex items-center justify-center flex-shrink-0">
                                 <svg class="lucide lucide-shield-check w-4 h-4 sm:w-5 sm:h-5 text-brand-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="m9 12 2 2 4-4" /></svg>
                             </div>
-                            <div>
+                            <div class="flex-1 min-w-0">
                                 <h3 class="font-semibold text-white text-sm sm:text-base mb-0.5 sm:mb-1">Source Attribution</h3>
                                 <p class="text-xs sm:text-sm text-gray-400">Every AI-generated answer includes source citations with page numbers and confidence scores. Essential for enterprise compliance and trustworthy AI business intelligence.</p>
                             </div>
@@ -614,9 +650,9 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                     <div class="relative glass rounded-xl sm:rounded-2xl p-1 shadow-2xl">
                         <div class="bg-[#0a0a1a] rounded-lg sm:rounded-xl overflow-hidden">
                             <div class="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 border-b border-white/5 bg-white/5">
-                                <svg class="lucide lucide-shopping-bag w-4 h-4 sm:w-5 sm:h-5 text-accent-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /> <path d="M3 6h18" /> <path d="M16 10a4 4 0 0 1-8 0" /></svg>
-                                <span class="text-xs sm:text-sm font-medium text-gray-300">TechBot — AI Shopping Assistant</span>
-                                <span class="ml-auto flex items-center gap-1 sm:gap-1.5">
+                                <svg class="lucide lucide-shopping-bag w-4 h-4 sm:w-5 sm:h-5 text-accent-400 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" /> <path d="M3 6h18" /> <path d="M16 10a4 4 0 0 1-8 0" /></svg>
+                                <span class="text-xs sm:text-sm font-medium text-gray-300 truncate min-w-0">TechBot — AI Shopping Assistant</span>
+                                <span class="ml-auto flex items-center gap-1 sm:gap-1.5 flex-shrink-0">
                                     <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-500 status-pulse"></span>
                                     <span class="text-[10px] sm:text-xs text-green-400">Online</span>
                                 </span>
@@ -641,15 +677,15 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                                     </div>
                                     <div class="glass rounded-xl sm:rounded-2xl rounded-tl-sm px-3 sm:px-4 py-2 sm:py-3 max-w-[90%] space-y-2 sm:space-y-3">
                                         <p class="text-xs sm:text-sm text-gray-300">Perfect! Based on your needs, I recommend the <span class="text-accent-400 font-semibold">MacBook Pro 14" M3</span>. It is currently <span class="text-green-400 font-semibold">$1,899</span> (down from $2,099).</p>
-                                        <div class="flex items-center gap-2 sm:gap-3 p-2 sm:p-2.5 rounded-lg bg-white/5">
-                                            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
+                                        <div class="techbot-product-card flex items-center gap-2 sm:gap-3 p-2 sm:p-2.5 rounded-lg bg-white/5">
+                                            <div class="techbot-icon w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-gray-700 flex items-center justify-center flex-shrink-0">
                                                 <svg class="lucide lucide-laptop w-5 h-5 sm:w-6 sm:h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16" /></svg>
                                             </div>
-                                            <div class="flex-1 min-w-0">
+                                            <div class="techbot-info flex-1 min-w-0">
                                                 <p class="text-xs sm:text-sm font-medium text-white truncate">MacBook Pro 14" M3</p>
                                                 <p class="text-[10px] sm:text-xs text-gray-500">32GB RAM - 512GB SSD</p>
                                             </div>
-                                            <button class="px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-accent-600 text-white text-[10px] sm:text-xs font-medium whitespace-nowrap">Add to Cart</button>
+                                            <button class="techbot-add-btn px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-accent-600 text-white text-[10px] sm:text-xs font-medium whitespace-nowrap flex-shrink-0">Add to Cart</button>
                                         </div>
                                         <p class="text-[10px] sm:text-xs text-gray-500">In stock - Ships today</p>
                                     </div>
@@ -996,7 +1032,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                     RAG <span class="gradient-text">Deliverables</span>
                 </h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
+                    <table class="w-full text-sm deliverables-table">
                         <thead>
                             <tr class="border-b border-white/10">
                                 <th class="text-left py-3 px-4 text-gray-400 font-medium">Feature</th>
@@ -1200,7 +1236,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                     AI Chatbot <span class="gradient-text">Deliverables</span>
                 </h3>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
+                    <table class="w-full text-sm deliverables-table">
                         <thead>
                             <tr class="border-b border-white/10">
                                 <th class="text-left py-3 px-4 text-gray-400 font-medium">Feature</th>

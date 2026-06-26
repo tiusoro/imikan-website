@@ -1752,6 +1752,73 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             ? 'http://localhost:8000' 
             : 'https://api.imikan-technologies.com';
 
+        // ===== FORM ALERTS (no backend required) =====
+        // 1) Web3Forms: free, no signup needed to get a key. This is what actually
+        //    stores every submission AND emails you instantly.
+        //    - Go to https://web3forms.com -> enter the email you want submissions sent to
+        //      -> they email you an Access Key. Paste it below.
+        //    - Every submission is also visible in your Web3Forms dashboard (web3forms.com/dashboard)
+        //      so you have an easy place to see everything, not just your inbox.
+        const WEB3FORMS_ACCESS_KEY = "68b7129c-d324-4d70-a682-7074fa76623f";
+
+        // 2) Slack Incoming Webhook: instant Slack message for every submission.
+        //    - In Slack: api.slack.com/apps -> "Create New App" -> "From scratch"
+        //      -> Features -> Incoming Webhooks -> Activate -> "Add New Webhook to Workspace"
+        //      -> pick the channel -> copy the Webhook URL and paste below.
+        //    - Leave this as an empty string "" to skip Slack alerts (email-only).
+        const SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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";
+
+        // Sends one submission to Web3Forms (storage + email) and, if configured, to Slack.
+        // Returns true if the Web3Forms call succeeded (used to decide on the mailto fallback).
+        async function sendFormAlerts({ formType, plan, name, email, phone, description }) {
+            let web3formsOk = false;
+
+            // --- Web3Forms (storage + email) ---
+            try {
+                const res = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                    body: JSON.stringify({
+                        access_key: WEB3FORMS_ACCESS_KEY,
+                        subject: 'New ' + formType + ' submission: ' + plan,
+                        from_name: 'Imikan Technologies Website',
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        plan: plan,
+                        form_type: formType,
+                        message: description
+                    })
+                });
+                const data = await res.json();
+                web3formsOk = res.ok && data.success;
+            } catch (err) {
+                console.error('Web3Forms submission error:', err);
+            }
+
+            // --- Slack (instant alert, fire-and-forget, never blocks the form) ---
+            if (SLACK_WEBHOOK_URL) {
+                try {
+                    await fetch(SLACK_WEBHOOK_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            text: ':bell: *New ' + formType + ' submission* — ' + plan +
+                                '\n*Name:* ' + name +
+                                '\n*Email:* ' + email +
+                                '\n*Phone:* ' + phone +
+                                '\n*Details:* ' + description
+                        })
+                    });
+                } catch (err) {
+                    console.error('Slack alert error:', err);
+                }
+            }
+
+            return web3formsOk;
+        }
+
         // ===== INITIALIZATION =====
 
         // ===== MOBILE MENU =====
@@ -1966,21 +2033,16 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             submitIcon.classList.add('animate-spin');
 
             try {
-                const response = await fetch(API_BASE_URL + '/api/submissions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        form_type: 'demo',
-                        plan: 'Demo Schedule',
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        description: description
-                    })
+                const ok = await sendFormAlerts({
+                    formType: 'Demo Schedule',
+                    plan: 'Demo Schedule',
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    description: description
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
+                if (ok) {
                     showToast('Demo request submitted successfully!', 'success');
                     // Google Analytics event tracking
                     gtag('event', 'demo_request', {
@@ -1993,16 +2055,15 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                     document.getElementById('demo-schedule-form').classList.add('hidden');
                     document.getElementById('demo-form-success').classList.remove('hidden');
                 } else {
-                    const error = await response.json();
-                    showToast('Error: ' + (error.detail || 'Failed to submit'), 'error');
+                    throw new Error('Web3Forms submission failed');
                 }
             } catch (err) {
                 console.error('Submission error:', err);
-                // Fallback to mailto if backend is unavailable
+                // Fallback to mailto if Web3Forms is unavailable / not yet configured
                 const subject = encodeURIComponent('Demo Request: ' + name);
                 const body = encodeURIComponent('Demo Schedule Request\n\nName: ' + name + '\nEmail: ' + email + '\nPhone: ' + phone + '\n\nWhat they are looking for:\n' + description + '\n\n---\nSent from Imikan Technologies website - Schedule a Demonstration');
                 window.location.href = 'mailto:tiusoro@gmail.com?subject=' + subject + '&body=' + body;
-                showToast('Backend unavailable. Falling back to email client.', 'info');
+                showToast('Falling back to email client.', 'info');
                 setTimeout(() => {
                     document.getElementById('demo-schedule-form').classList.add('hidden');
                     document.getElementById('demo-form-success').classList.remove('hidden');
@@ -2066,21 +2127,16 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             submitIcon.classList.add('animate-spin');
 
             try {
-                const response = await fetch(API_BASE_URL + '/api/submissions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        form_type: 'pricing',
-                        plan: plan,
-                        name: name,
-                        email: email,
-                        phone: phone,
-                        description: description
-                    })
+                const ok = await sendFormAlerts({
+                    formType: 'Pricing Inquiry',
+                    plan: plan,
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    description: description
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
+                if (ok) {
                     showToast('Inquiry submitted successfully!', 'success');
                     gtag('event', 'pricing_inquiry', {
                         'event_category': 'form',
@@ -2091,16 +2147,15 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                     document.getElementById('contact-form').classList.add('hidden');
                     document.getElementById('form-success').classList.remove('hidden');
                 } else {
-                    const error = await response.json();
-                    showToast('Error: ' + (error.detail || 'Failed to submit'), 'error');
+                    throw new Error('Web3Forms submission failed');
                 }
             } catch (err) {
                 console.error('Submission error:', err);
-                // Fallback to mailto
+                // Fallback to mailto if Web3Forms is unavailable / not yet configured
                 const subject = encodeURIComponent('New Inquiry: ' + plan + ' - ' + name);
                 const body = encodeURIComponent('Plan: ' + plan + '\n\nName: ' + name + '\nEmail: ' + email + '\nPhone: ' + phone + '\n\nProject Description:\n' + description + '\n\n---\nSent from Imikan Technologies website');
                 window.location.href = 'mailto:tiusoro@gmail.com?subject=' + subject + '&body=' + body;
-                showToast('Backend unavailable. Falling back to email client.', 'info');
+                showToast('Falling back to email client.', 'info');
                 setTimeout(() => {
                     document.getElementById('contact-form').classList.add('hidden');
                     document.getElementById('form-success').classList.remove('hidden');

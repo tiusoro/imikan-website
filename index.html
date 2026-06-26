@@ -405,6 +405,10 @@
             .techbot-product-card .techbot-info { order: 2; flex-basis: calc(100% - 3.25rem); }
             .techbot-product-card .techbot-add-btn { order: 3; width: 100%; text-align: center; }
         }
+
+        /* ===== Global anti-overflow hardening (catches text-spill from long words/strings anywhere on the page) ===== */
+        p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; word-break: break-word; }
+        img, svg, pre, code, table { max-width: 100%; }
     </style>
 
     <base target="_blank">

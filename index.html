@@ -1753,22 +1753,15 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             : 'https://api.imikan-technologies.com';
 
         // ===== FORM ALERTS (no backend required) =====
-        // 1) Web3Forms: free, no signup needed to get a key. This is what actually
-        //    stores every submission AND emails you instantly.
+        // Web3Forms: free, no signup needed to get a key. This is what actually
+        // stores every submission AND emails you instantly.
         //    - Go to https://web3forms.com -> enter the email you want submissions sent to
         //      -> they email you an Access Key. Paste it below.
         //    - Every submission is also visible in your Web3Forms dashboard (web3forms.com/dashboard)
         //      so you have an easy place to see everything, not just your inbox.
         const WEB3FORMS_ACCESS_KEY = "68b7129c-d324-4d70-a682-7074fa76623f";
 
-        // 2) Slack Incoming Webhook: instant Slack message for every submission.
-        //    - In Slack: api.slack.com/apps -> "Create New App" -> "From scratch"
-        //      -> Features -> Incoming Webhooks -> Activate -> "Add New Webhook to Workspace"
-        //      -> pick the channel -> copy the Webhook URL and paste below.
-        //    - Leave this as an empty string "" to skip Slack alerts (email-only).
-        const SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/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";
-
-        // Sends one submission to Web3Forms (storage + email) and, if configured, to Slack.
+        // Sends one submission to Web3Forms (storage + email).
         // Returns true if the Web3Forms call succeeded (used to decide on the mailto fallback).
         async function sendFormAlerts({ formType, plan, name, email, phone, description }) {
             let web3formsOk = false;
@@ -1794,26 +1787,6 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                 web3formsOk = res.ok && data.success;
             } catch (err) {
                 console.error('Web3Forms submission error:', err);
-            }
-
-            // --- Slack (instant alert, fire-and-forget, never blocks the form) ---
-            if (SLACK_WEBHOOK_URL) {
-                try {
-                    await fetch(SLACK_WEBHOOK_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            text: ':bell: *New ' + formType + ' submission* — ' + plan +
-                                '\n*Name:* ' + name +
-                                '\n*Email:* ' + email +
-                                '\n*Phone:* ' + phone +
-                                '\n*Details:* ' + description
-                        })
-                    });
-                } catch (err) {
-                    console.error('Slack alert error:', err);
-                }
             }
 
             return web3formsOk;

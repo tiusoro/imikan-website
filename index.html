@@ -144,7 +144,7 @@
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "Sales & Support",
-        "email": "tiusoro@gmail.com",
+        "email": "contact@imikan-technologies.com",
         "availableLanguage": ["English"]
       },
       "knowsAbout": [
@@ -2085,7 +2085,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                 // Fallback to mailto if Web3Forms is unavailable / not yet configured
                 const subject = encodeURIComponent('Demo Request: ' + name);
                 const body = encodeURIComponent('Demo Schedule Request\n\nName: ' + name + '\nEmail: ' + email + '\nPhone: ' + phone + '\n\nWhat they are looking for:\n' + description + '\n\n---\nSent from Imikan Technologies website - Schedule a Demonstration');
-                window.location.href = 'mailto:tiusoro@gmail.com?subject=' + subject + '&body=' + body;
+                window.location.href = 'mailto:contact@imikan-technologies.com?subject=' + subject + '&body=' + body;
                 showToast('Falling back to email client.', 'info');
                 setTimeout(() => {
                     document.getElementById('demo-schedule-form').classList.add('hidden');
@@ -2177,7 +2177,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                 // Fallback to mailto if Web3Forms is unavailable / not yet configured
                 const subject = encodeURIComponent('New Inquiry: ' + plan + ' - ' + name);
                 const body = encodeURIComponent('Plan: ' + plan + '\n\nName: ' + name + '\nEmail: ' + email + '\nPhone: ' + phone + '\n\nProject Description:\n' + description + '\n\n---\nSent from Imikan Technologies website');
-                window.location.href = 'mailto:tiusoro@gmail.com?subject=' + subject + '&body=' + body;
+                window.location.href = 'mailto:contact@imikan-technologies.com?subject=' + subject + '&body=' + body;
                 showToast('Falling back to email client.', 'info');
                 setTimeout(() => {
                     document.getElementById('contact-form').classList.add('hidden');

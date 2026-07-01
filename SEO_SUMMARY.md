@@ -228,5 +228,5 @@ Added 6 SEO-optimized article cards targeting high-search keywords:
 ---
 
 **Prepared by:** Imikan Technologies
-**Contact:** tiusoro@gmail.com
+**Contact:** contact@imikan-technologies.com
 **Website:** https://www.imikan-technologies.com/

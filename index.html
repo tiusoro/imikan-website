@@ -482,7 +482,7 @@ window.addEventListener('load', function() {
 
     <div class="noise-overlay" aria-hidden="true"></div>
     <div id="mobile-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300" onclick="closeMobileMenu()"></div>
-    <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 w-80 h-full bg-[#0a0a1a] border-l border-white/10 z-50 p-6 lg:hidden">
+    <div id="mobile-menu" class="mobile-menu fixed top-0 right-0 w-80 h-full bg-[#0a0a1a] border-l border-white/10 z-50 p-6 lg:hidden" aria-hidden="true" inert>
         <div class="flex items-center justify-between mb-8">
             <span class="font-display font-bold text-lg text-white">Menu</span>
             <button onclick="closeMobileMenu()" class="w-10 h-10 rounded-lg glass flex items-center justify-center text-gray-400 hover:text-white transition-colors" aria-label="Close menu">
@@ -507,7 +507,7 @@ window.addEventListener('load', function() {
             <div class="flex items-center justify-between h-16 sm:h-20">
                 <a href="#" class="flex items-center gap-2 sm:gap-3 group shrink-0">
                     <div class="relative w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center overflow-hidden rounded-lg bg-white/5">
-                        <img src="imikan-logo-80.png" alt="Imikan Technologies" width="40" height="40" class="w-full h-full object-contain rounded-lg" loading="eager" fetchpriority="high" decoding="async">
+                        <img src="imikan-logo-80.png" alt="" width="40" height="40" class="w-full h-full object-contain rounded-lg" loading="eager" fetchpriority="high" decoding="async">
                     </div>
                     <div class="flex flex-col leading-none">
                         <span class="font-display font-bold text-base sm:text-lg tracking-tight text-white">Imikan</span>
@@ -533,48 +533,48 @@ window.addEventListener('load', function() {
         </div>
     </nav>
 
-    <section id="main-content" class="relative min-h-[100dvh] flex items-center justify-center pt-20 pb-12 overflow-hidden mesh-bg grid-pattern">
+    <section id="main-content" role="main" class="relative min-h-[100dvh] flex items-center justify-center pt-20 pb-12 overflow-hidden mesh-bg grid-pattern">
         <div class="hero-glow" id="hero-glow"></div>
         <div class="absolute top-24 sm:top-32 left-4 sm:left-10 w-40 sm:w-64 h-40 sm:h-64 bg-brand-500/8 rounded-full blur-3xl animate-float pointer-events-none" aria-hidden="true"></div>
         <div class="absolute bottom-24 sm:bottom-32 right-4 sm:right-10 w-48 sm:w-96 h-48 sm:h-96 bg-accent-500/8 rounded-full blur-3xl animate-float pointer-events-none" style="animation-delay: 2s;" aria-hidden="true"></div>
         <div class="absolute top-1/2 left-1/4 w-32 h-32 bg-brand-400/5 rounded-full blur-2xl animate-float pointer-events-none" style="animation-delay: 4s;" aria-hidden="true"></div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
-            <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass border border-brand-500/20 mb-6 sm:mb-8 reveal">
+            <div class="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass border border-brand-500/20 mb-6 sm:mb-8 reveal active">
                 <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-brand-400 animate-pulse"></span>
                 <span class="text-xs sm:text-sm font-medium text-brand-300">Building AI Solutions One at a Time</span>
             </div>
-            <h2 class="font-display hero-title font-bold tracking-tight mb-4 sm:mb-6 reveal" style="transition-delay: 100ms;">
+            <h2 class="font-display hero-title font-bold tracking-tight mb-4 sm:mb-6 reveal active">
                 <span class="block text-white">Intelligence That</span>
                 <span class="gradient-text typing-cursor" id="typing-text">Understands Your Data</span>
             </h2>
-            <p class="max-w-xl sm:max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-400 mb-8 sm:mb-12 leading-relaxed px-4 reveal" style="transition-delay: 200ms;">
+            <p class="max-w-xl sm:max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-gray-400 mb-8 sm:mb-12 leading-relaxed px-4 reveal active">
                 Enterprise-grade Retrieval-Augmented Generation (RAG) Systems and Shopify ecommerce AI chatbot solutions for businesses in Nigeria, Africa, and the World. 
                 <br>
                 Transform your unstructured documents into intelligent data with sub-second latency retrieval and source citations you can trust.
             </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 reveal px-4 w-full max-w-md mx-auto sm:max-w-none" style="transition-delay: 300ms;">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 reveal active px-4 w-full max-w-md mx-auto sm:max-w-none">
                 <button onclick="openVideoModal()" class="btn-shine group w-full px-6 sm:px-8 py-3.5 sm:py-4 rounded-full glass text-white font-semibold text-base sm:text-lg hover:bg-white/5 transition-all duration-300 flex items-center justify-center gap-2 min-h-[52px] sm:min-h-[56px]">
                     <svg class="lucide lucide-play-circle w-4 h-4 sm:w-5 sm:h-5 text-brand-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <polygon points="10 8 16 12 10 16 10 8" /></svg>
                     Watch Demo
                 </button>
             </div>
-            <div class="mt-12 sm:mt-16 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-3xl mx-auto reveal px-4" style="transition-delay: 400ms;">
+            <div class="mt-12 sm:mt-16 md:mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-3xl mx-auto reveal active px-4">
                 <div class="text-center p-3 sm:p-4 rounded-xl glass">
                     <div class="text-2xl sm:text-3xl md:text-4xl font-display font-bold gradient-text">50ms</div>
-                    <div class="text-xs sm:text-sm text-gray-500 mt-1">Avg. Latency</div>
+                    <div class="text-xs sm:text-sm text-gray-400 mt-1">Avg. Latency</div>
                 </div>
                 <div class="text-center p-3 sm:p-4 rounded-xl glass">
                     <div class="text-2xl sm:text-3xl md:text-4xl font-display font-bold gradient-text">99.9%</div>
-                    <div class="text-xs sm:text-sm text-gray-500 mt-1">Uptime SLA</div>
+                    <div class="text-xs sm:text-sm text-gray-400 mt-1">Uptime SLA</div>
                 </div>
                 <div class="text-center p-3 sm:p-4 rounded-xl glass">
                     <div class="text-2xl sm:text-3xl md:text-4xl font-display font-bold gradient-text">10M+</div>
-                    <div class="text-xs sm:text-sm text-gray-500 mt-1">Docs Processed</div>
+                    <div class="text-xs sm:text-sm text-gray-400 mt-1">Docs Processed</div>
                 </div>
                 <div class="text-center p-3 sm:p-4 rounded-xl glass">
                     <div class="text-2xl sm:text-3xl md:text-4xl font-display font-bold gradient-text">500+</div>
-                    <div class="text-xs sm:text-sm text-gray-500 mt-1">Shopify Stores</div>
+                    <div class="text-xs sm:text-sm text-gray-400 mt-1">Shopify Stores</div>
                 </div>
             </div>
         </div>
@@ -585,7 +585,7 @@ window.addEventListener('load', function() {
 
     <section class="py-12 sm:py-20 border-y border-white/5 bg-black/20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p class="text-center text-xs sm:text-sm font-medium text-gray-500 uppercase tracking-wider mb-6 sm:mb-10">Trusted by innovative teams across Nigeria, Africa, and the world</p>
+            <p class="text-center text-xs sm:text-sm font-medium text-gray-400 uppercase tracking-wider mb-6 sm:mb-10">Trusted by innovative teams across Nigeria, Africa, and the world</p>
             <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-10 md:gap-12 lg:gap-16 opacity-40">
                 <div class="flex items-center gap-2 text-lg sm:text-xl font-display font-bold text-gray-400"><svg class="lucide lucide-hexagon w-5 h-5 sm:w-6 sm:h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" /></svg> Vercel</div>
                 <div class="flex items-center gap-2 text-lg sm:text-xl font-display font-bold text-gray-400"><svg class="lucide lucide-triangle w-5 h-5 sm:w-6 sm:h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.73 4a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" /></svg> Linear</div>
@@ -1849,11 +1849,15 @@ response = <span class="text-purple-400">await</span> pipeline.query(
         // ===== MOBILE MENU =====
         function openMobileMenu() {
             document.getElementById('mobile-menu').classList.add('open');
+            document.getElementById('mobile-menu').removeAttribute('aria-hidden');
+            document.getElementById('mobile-menu').removeAttribute('inert');
             document.getElementById('mobile-overlay').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
         function closeMobileMenu() {
             document.getElementById('mobile-menu').classList.remove('open');
+            document.getElementById('mobile-menu').setAttribute('aria-hidden', 'true');
+            document.getElementById('mobile-menu').setAttribute('inert', '');
             document.getElementById('mobile-overlay').classList.add('hidden');
             document.body.style.overflow = '';
         }

@@ -1,0 +1,21 @@
+# Project-specific
+misc/
+
+# Environment variables & secrets — never commit real keys/tokens
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+
+# Dependency folders (if you ever add build tooling)
+node_modules/

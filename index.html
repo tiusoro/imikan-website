@@ -98,8 +98,6 @@
     <link rel="mask-icon" href="images/imikan-logo-80.png" color="#6366f1">
 
     <!-- ===== PRECONNECT & DNS-PREFETCH ===== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
 
     <!-- ===== STYLESHEETS (loaded non-render-blocking; falls back to system font until ready) ===== -->
@@ -2284,16 +2282,22 @@ response = <span class="text-purple-400">await</span> pipeline.query(
 
         // ===== NAVBAR SCROLL =====
         const nav = document.getElementById('navbar');
-        let lastScroll = 0;
+        let navShadowOn = false;
+        let scrollTicking = false;
         window.addEventListener('scroll', () => {
-            const currentScroll = window.pageYOffset;
-            if (currentScroll > 50) {
-                nav.classList.add('shadow-lg', 'shadow-black/20');
-            } else {
-                nav.classList.remove('shadow-lg', 'shadow-black/20');
+            if (!scrollTicking) {
+                window.requestAnimationFrame(() => {
+                    const shouldShow = window.pageYOffset > 50;
+                    if (shouldShow !== navShadowOn) {
+                        nav.classList.toggle('shadow-lg', shouldShow);
+                        nav.classList.toggle('shadow-black/20', shouldShow);
+                        navShadowOn = shouldShow;
+                    }
+                    scrollTicking = false;
+                });
+                scrollTicking = true;
             }
-            lastScroll = currentScroll;
-        });
+        }, { passive: true });
 
         // ===== HERO GLOW PARALLAX (desktop only) =====
         const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;

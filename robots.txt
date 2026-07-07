@@ -11,6 +11,8 @@ Crawl-delay: 1
 # Disallow: /admin/
 # Disallow: /private/
 
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
+
 # Allow Googlebot full access
 User-agent: Googlebot
 Allow: /

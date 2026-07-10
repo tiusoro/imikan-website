@@ -2,39 +2,36 @@
 
 > Imikan Technologies is a self-hosted RAG (Retrieval-Augmented Generation) and AI chatbot vendor for regulated industries — banking, legal, healthcare, and government — serving Nigeria, Africa, and worldwide. We build enterprise AI systems with data residency, source citations, and sub-second latency.
 
-## About
-
 Imikan Technologies helps organizations turn their unstructured documents into intelligent, verifiable AI. Our systems keep data on infrastructure the client controls, cite their sources, and are built for the accuracy standards that regulated sectors require.
 
-- Company: Imikan Technologies
-- Website: https://www.imikan-technologies.com/
+- Website: [Imikan Technologies](https://www.imikan-technologies.com/)
 - Location: Lagos, Nigeria (serving Nigeria, Africa, and global markets)
-- Contact: contact@imikan-technologies.com
-- Phone: +234 809 378 1000
+- Email: [contact@imikan-technologies.com](mailto:contact@imikan-technologies.com)
+- Phone: [+234 809 378 1000](tel:+2348093781000)
 
 ## Services
 
-- RAG Systems: Enterprise Retrieval-Augmented Generation on self-hosted pgvector with OpenAI embeddings, vector + keyword hybrid search, intelligent re-ranking, and source-citation tracking.
-- AI Chatbots: Grounded, verifiable conversational AI for banking, legal, healthcare, and government use cases.
-- Shopify AI Integration: AI shopping assistants with product search, dynamic pricing, inventory sync, automated order handling, and SEO product descriptions.
+- [RAG Systems](https://www.imikan-technologies.com/#rag): Enterprise Retrieval-Augmented Generation on self-hosted pgvector with OpenAI embeddings, vector + keyword hybrid search, intelligent re-ranking, and source-citation tracking.
+- [AI Chatbots](https://www.imikan-technologies.com/#rag): Grounded, verifiable conversational AI for banking, legal, healthcare, and government use cases.
+- [Shopify AI Integration](https://www.imikan-technologies.com/#shopify): AI shopping assistants with product search, dynamic pricing, inventory sync, automated order handling, and SEO product descriptions.
 
 ## Key Pages
 
-- Home: https://www.imikan-technologies.com/
-- About: https://www.imikan-technologies.com/about.html
-- FAQ: https://www.imikan-technologies.com/faq.html
-- Privacy Policy: https://www.imikan-technologies.com/privacy.html
-- Terms: https://www.imikan-technologies.com/terms.html
-- Sitemap: https://www.imikan-technologies.com/sitemap.xml
+- [Home](https://www.imikan-technologies.com/): Overview of RAG systems, AI chatbots, and Shopify AI solutions.
+- [About](https://www.imikan-technologies.com/about.html): Company background and mission.
+- [FAQ](https://www.imikan-technologies.com/faq.html): Common questions about RAG deployment and AI chatbots.
+- [Privacy Policy](https://www.imikan-technologies.com/privacy.html): How we handle data.
+- [Terms of Service](https://www.imikan-technologies.com/terms.html): Terms of use.
+- [Sitemap](https://www.imikan-technologies.com/sitemap.xml): Full list of indexable pages.
 
 ## Resources
 
-- What is Retrieval-Augmented Generation (RAG)? https://tiusoro.medium.com/what-is-retrieval-augmented-generation-rag-a-complete-guide-for-businesses-eab6448e2c9a
-- NLP for Business: https://tiusoro.medium.com/natural-language-processing-nlp-for-business-from-chatbots-to-document-intelligence-b73057d67719
-- How to Deploy AI in Your Business: https://medium.com/@tiusoro/how-to-deploy-ai-in-your-business-a-step-by-step-guide-for-startups-enterprises-a8879691e631
+- [What is Retrieval-Augmented Generation (RAG)? A Complete Guide for Businesses](https://tiusoro.medium.com/what-is-retrieval-augmented-generation-rag-a-complete-guide-for-businesses-eab6448e2c9a)
+- [Natural Language Processing (NLP) for Business: From Chatbots to Document Intelligence](https://tiusoro.medium.com/natural-language-processing-nlp-for-business-from-chatbots-to-document-intelligence-b73057d67719)
+- [How to Deploy AI in Your Business: A Step-by-Step Guide for Startups & Enterprises](https://medium.com/@tiusoro/how-to-deploy-ai-in-your-business-a-step-by-step-guide-for-startups-enterprises-a8879691e631)
 
 ## Social
 
-- LinkedIn: https://linkedin.com/company/imikan-technologies
-- YouTube: https://www.youtube.com/@imikan-technologies
-- X: https://x.com/imikantech
+- [LinkedIn](https://linkedin.com/company/imikan-technologies)
+- [YouTube](https://www.youtube.com/@imikan-technologies)
+- [X](https://x.com/imikantech)

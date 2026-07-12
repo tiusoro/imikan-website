@@ -2603,7 +2603,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             if (!res.ok) throw new Error('Request failed: ' + res.status);
             const data = await res.json();
             typingEl.remove();
-            addMessage(data.response || data.message || "Sorry, I didn't get a response.", 'bot');
+            addMessage(data.answer || data.response || data.message || "Sorry, I didn't get a response.", 'bot');
         } catch (err) {
             typingEl.remove();
             addMessage("Sorry, I'm having trouble connecting right now. Please try again shortly.", 'bot');

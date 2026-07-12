@@ -2377,7 +2377,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     #imikan-chat-close{margin-left:auto;background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:.25rem;line-height:0;}
     #imikan-chat-close:hover{color:#fff;}
     #imikan-chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.65rem;}
-    .imikan-msg{max-width:85%;padding:.6rem .8rem;border-radius:.9rem;font-size:.83rem;line-height:1.45;}
+    .imikan-msg{max-width:85%;padding:.6rem .8rem;border-radius:.9rem;font-size:.83rem;line-height:1.45;white-space:pre-line;}
     .imikan-msg.bot{align-self:flex-start;background:rgba(255,255,255,.06);color:#e2e8f0;border-bottom-left-radius:.2rem;}
     .imikan-msg.user{align-self:flex-end;background:linear-gradient(135deg,#4f46e5,#0284c7);color:#fff;border-bottom-right-radius:.2rem;}
     .imikan-msg.typing{align-self:flex-start;display:flex;gap:.25rem;padding:.7rem .9rem;}
@@ -2564,7 +2564,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
         panel.classList.add('open');
         opened = true;
         if (messagesEl.children.length === 0) {
-            addMessage("Hi! I'm Mikan, Imikan's assistant. Ask me about our RAG pipelines, AI chatbot packages, pricing, or book a demo.", 'bot');
+            addMessage("Hi! 👋 I'm Mikan, your AI assistant.\n\nWelcome to Imikan Technologies! I'm here to answer your questions about our AI solutions, including Retrieval-Augmented Generation (RAG) pipelines, AI chatbot packages, pricing, and implementation.\n\nWhether you're exploring AI for your business or ready to get started, I can also help you book a demo with our team.\n\nHow can I help you today?", 'bot');
         }
         input.focus();
     }

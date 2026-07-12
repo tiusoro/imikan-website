@@ -337,8 +337,13 @@
         /* ===== Mobile optimization additions ===== */
 
         /* Frozen "Feature" column for the RAG / AI Chatbot Deliverables comparison tables.
-           Works on all screen sizes but is most useful once the table scrolls horizontally on phones. */
-        .deliverables-table { border-collapse: separate; border-spacing: 0; }
+           Works on all screen sizes but is most useful once the table scrolls horizontally on phones.
+           table-layout: fixed + an explicit first-column width means every deliverables-table
+           on the page (What You Get + Under the Hood, for both RAG and AI Chatbot) shares the
+           exact same column widths, so the Standard/Professional/Enterprise columns line up
+           vertically even though "What You Get" and "Under the Hood" are separate <table>s with
+           different label text. */
+        .deliverables-table { border-collapse: separate; border-spacing: 0; table-layout: fixed; width: 100%; }
         .deliverables-table th:first-child,
         .deliverables-table td:first-child {
             position: sticky;
@@ -346,15 +351,21 @@
             z-index: 2;
             background: var(--bg-deep);
             box-shadow: 3px 0 8px rgba(0,0,0,0.45);
+            width: 240px;
+        }
+        .deliverables-table th:not(:first-child),
+        .deliverables-table td:not(:first-child) {
+            width: calc((100% - 240px) / 3);
         }
         .deliverables-table thead th:first-child { z-index: 3; }
         @media (max-width: 639px) {
             .deliverables-table { font-size: 0.75rem; }
             .deliverables-table th:first-child,
-            .deliverables-table td:first-child { min-width: 132px; max-width: 132px; white-space: normal; padding-left: 0.75rem; padding-right: 0.5rem; }
+            .deliverables-table td:first-child { width: 132px; min-width: 132px; max-width: 132px; white-space: normal; padding-left: 0.75rem; padding-right: 0.5rem; }
             .deliverables-table th:not(:first-child),
-            .deliverables-table td:not(:first-child) { min-width: 84px; padding-left: 0.5rem; padding-right: 0.5rem; }
+            .deliverables-table td:not(:first-child) { width: 84px; min-width: 84px; padding-left: 0.5rem; padding-right: 0.5rem; }
         }
+
 
         /* rag_pipeline.py code block: keep it readable without overflowing small phones */
         @media (max-width: 400px) {
@@ -2354,11 +2365,13 @@ response = <span class="text-purple-400">await</span> pipeline.query(
 <style>
     #imikan-chat-launcher{position:fixed;bottom:1.5rem;right:1.5rem;z-index:90;width:3.75rem;height:3.75rem;border-radius:9999px;background:linear-gradient(135deg,#4f46e5,#0284c7);display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;box-shadow:0 10px 25px -5px rgba(79,70,229,.4);transition:transform .2s ease,box-shadow .2s ease;}
     #imikan-chat-launcher:hover{transform:scale(1.08);box-shadow:0 15px 30px -5px rgba(79,70,229,.55);}
-    #imikan-chat-launcher svg{width:1.75rem;height:1.75rem;color:#fff;}
+    #imikan-chat-launcher svg{width:2.6rem;height:2.6rem;}
     #imikan-chat-panel{position:fixed;bottom:6rem;right:1.5rem;z-index:90;width:min(370px,calc(100vw - 2rem));height:min(520px,calc(100vh - 8rem));background:#111122;border:1px solid rgba(255,255,255,.08);border-radius:1rem;box-shadow:0 25px 50px -12px rgba(0,0,0,.5);display:flex;flex-direction:column;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(12px) scale(.97);transition:opacity .2s ease,transform .2s ease;font-family:Inter,sans-serif;}
     #imikan-chat-panel.open{opacity:1;pointer-events:auto;transform:translateY(0) scale(1);}
-    #imikan-chat-header{display:flex;align-items:center;gap:.6rem;padding:1rem 1.1rem;background:linear-gradient(135deg,rgba(79,70,229,.18),rgba(2,132,199,.18));border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
-    #imikan-chat-header .imikan-dot{width:.5rem;height:.5rem;border-radius:9999px;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.2);flex-shrink:0;}
+    #imikan-chat-header{display:flex;align-items:center;gap:.7rem;padding:1rem 1.1rem;background:linear-gradient(135deg,rgba(79,70,229,.18),rgba(2,132,199,.18));border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;}
+    #imikan-avatar-wrap{position:relative;flex-shrink:0;width:38px;height:38px;}
+    #imikan-avatar-wrap svg{border-radius:9999px;display:block;}
+    #imikan-chat-header .imikan-dot{position:absolute;bottom:-1px;right:-1px;width:.6rem;height:.6rem;border-radius:9999px;background:#4ade80;border:2px solid #111122;box-shadow:0 0 0 1px rgba(74,222,128,.25);}
     #imikan-chat-header .imikan-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:.9rem;color:#fff;}
     #imikan-chat-header .imikan-sub{font-size:.7rem;color:#94a3b8;}
     #imikan-chat-close{margin-left:auto;background:transparent;border:none;color:#94a3b8;cursor:pointer;padding:.25rem;line-height:0;}
@@ -2382,14 +2395,121 @@ response = <span class="text-purple-400">await</span> pipeline.query(
 </style>
 
 <button id="imikan-chat-launcher" aria-label="Open chat">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="40" height="40">
+        <defs>
+            <linearGradient id="launcherSkin" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#ffe3c7"/>
+                <stop offset="1" stop-color="#f3b78a"/>
+            </linearGradient>
+            <linearGradient id="launcherHair" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#4a2c1a"/>
+                <stop offset="1" stop-color="#7a4a28"/>
+            </linearGradient>
+            <linearGradient id="launcherHairHi" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#9a6a3e"/>
+                <stop offset="1" stop-color="#c98f52"/>
+            </linearGradient>
+        </defs>
+
+        <!-- hair, back layer (chunkier + rounder for a cute proportions) -->
+        <path d="M8 32C8 12 18 2 32 2s24 10 24 30c0 5-1 9-2.5 12-2-5-6-8-11-8H23.5c-5 0-9 3-11 8C9 41 8 37 8 32z" fill="url(#launcherHair)"/>
+
+        <!-- face -->
+        <ellipse cx="32" cy="34" rx="16.5" ry="17.5" fill="url(#launcherSkin)"/>
+
+        <!-- hair bangs, side-swept with highlight -->
+        <path d="M16 21c3-8 9-13 16-13s13 5 15 12c-4-2-8-3-13-2-6 1-11 4-18 3z" fill="url(#launcherHairHi)"/>
+        <path d="M15 23c2-7 8-12 17-12 4 0 7 1 10 3-6 0-12 2-16 7-2 3-3 7-3 12-5-2-9-6-8-10z" fill="url(#launcherHair)"/>
+
+        <!-- big cute eyes -->
+        <ellipse cx="24.5" cy="34" rx="3.6" ry="4.2" fill="#3d2415"/>
+        <ellipse cx="39.5" cy="34" rx="3.6" ry="4.2" fill="#3d2415"/>
+        <circle cx="25.6" cy="32.3" r="1.3" fill="#fff"/>
+        <circle cx="40.6" cy="32.3" r="1.3" fill="#fff"/>
+        <circle cx="23.5" cy="35.5" r="0.7" fill="#fff" opacity=".8"/>
+        <circle cx="38.5" cy="35.5" r="0.7" fill="#fff" opacity=".8"/>
+
+        <!-- rosy cheeks -->
+        <ellipse cx="20.5" cy="41" rx="3.4" ry="2.2" fill="#f0808a" opacity=".55"/>
+        <ellipse cx="43.5" cy="41" rx="3.4" ry="2.2" fill="#f0808a" opacity=".55"/>
+
+        <!-- big warm smile -->
+        <path d="M23 43c4 4 14 4 18 0-3 6.5-15 6.5-18 0z" fill="#c65d6e"/>
+        <path d="M24.6 43.8c3.2 2.4 11.6 2.4 14.8 0-2.4 3.6-12.4 3.6-14.8 0z" fill="#e98a95"/>
+    </svg>
 </button>
 
 <div id="imikan-chat-panel">
     <div id="imikan-chat-header">
-        <span class="imikan-dot"></span>
+        <div id="imikan-avatar-wrap">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="38" height="38">
+                <defs>
+                    <linearGradient id="mikanRing" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#4f46e5"/>
+                        <stop offset="1" stop-color="#0ea5e9"/>
+                    </linearGradient>
+                    <linearGradient id="mikanSkin" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#ffe3c7"/>
+                        <stop offset="1" stop-color="#f3b78a"/>
+                    </linearGradient>
+                    <linearGradient id="mikanHair" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#4a2c1a"/>
+                        <stop offset="1" stop-color="#7a4a28"/>
+                    </linearGradient>
+                    <linearGradient id="mikanHairHi" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stop-color="#9a6a3e"/>
+                        <stop offset="1" stop-color="#c98f52"/>
+                    </linearGradient>
+                </defs>
+
+                <circle cx="32" cy="32" r="31" fill="none" stroke="url(#mikanRing)" stroke-width="2"/>
+                <circle cx="32" cy="32" r="29" fill="#fdf3ea"/>
+
+                <!-- shoulders / top -->
+                <path d="M14 60c2-8 9-13 18-13s16 5 18 13z" fill="#4c63c9"/>
+
+                <!-- hair, back layer -->
+                <path d="M10 34C10 15 19 5 32 5s22 10 22 29c0 6-1 11-3 15-2-6-6-10-12-10H25c-6 0-10 4-12 10-2-4-3-9-3-15z" fill="url(#mikanHair)"/>
+
+                <!-- face -->
+                <ellipse cx="32" cy="35" rx="14" ry="16" fill="url(#mikanSkin)"/>
+
+                <!-- ears + studs -->
+                <ellipse cx="17.5" cy="36" rx="2.6" ry="4" fill="url(#mikanSkin)"/>
+                <ellipse cx="46.5" cy="36" rx="2.6" ry="4" fill="url(#mikanSkin)"/>
+                <circle cx="17.5" cy="39" r="1" fill="#e8b750"/>
+                <circle cx="46.5" cy="39" r="1" fill="#e8b750"/>
+
+                <!-- hair, side-swept bangs with highlight -->
+                <path d="M19 20c3-7 8-11 13-11s10 4 12 10c-3-2-7-3-11-2-5 1-9 4-14 3z" fill="url(#mikanHairHi)"/>
+                <path d="M18 22c2-6 7-10 14-10 3 0 6 1 8 3-5 0-10 2-13 6-2 3-3 7-3 11-4-2-7-6-6-10z" fill="url(#mikanHair)"/>
+
+                <!-- eyebrows -->
+                <path d="M22 30c2-1.5 5-1.5 7 0" stroke="#5a3a22" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+                <path d="M35 30c2-1.5 5-1.5 7 0" stroke="#5a3a22" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+
+                <!-- eyes -->
+                <ellipse cx="25.5" cy="34.5" rx="3.2" ry="2.3" fill="#fff"/>
+                <ellipse cx="38.5" cy="34.5" rx="3.2" ry="2.3" fill="#fff"/>
+                <circle cx="26" cy="34.5" r="1.7" fill="#5a3a22"/>
+                <circle cx="39" cy="34.5" r="1.7" fill="#5a3a22"/>
+                <circle cx="26.5" cy="33.9" r="0.5" fill="#fff"/>
+                <circle cx="39.5" cy="33.9" r="0.5" fill="#fff"/>
+                <path d="M22.3 33.3c1.5-1.8 5.5-1.8 6.8 0" stroke="#3d2415" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+                <path d="M35.3 33.3c1.5-1.8 5.5-1.8 6.8 0" stroke="#3d2415" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+
+                <!-- blush -->
+                <ellipse cx="22" cy="40" rx="2.6" ry="1.6" fill="#f0808a" opacity=".45"/>
+                <ellipse cx="42" cy="40" rx="2.6" ry="1.6" fill="#f0808a" opacity=".45"/>
+
+                <!-- smiling lips -->
+                <path d="M25 43c3 2.6 11 2.6 14 0-3 4.6-11 4.6-14 0z" fill="#c65d6e"/>
+                <path d="M26.3 43.6c2.4 1.6 9 1.6 11.4 0-2 2.8-9.4 2.8-11.4 0z" fill="#e98a95"/>
+            </svg>
+            <span class="imikan-dot"></span>
+        </div>
         <div>
-            <div class="imikan-title">Imikan Assistant</div>
+            <div class="imikan-title">Mikan</div>
             <div class="imikan-sub">Ask about RAG, pricing, or a demo</div>
         </div>
         <button id="imikan-chat-close" aria-label="Close chat">
@@ -2444,7 +2564,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
         panel.classList.add('open');
         opened = true;
         if (messagesEl.children.length === 0) {
-            addMessage("Hi! I'm the Imikan assistant. Ask me about our RAG pipelines, AI chatbot packages, pricing, or book a demo.", 'bot');
+            addMessage("Hi! I'm Mikan, Imikan's assistant. Ask me about our RAG pipelines, AI chatbot packages, pricing, or book a demo.", 'bot');
         }
         input.focus();
     }

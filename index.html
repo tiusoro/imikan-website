@@ -3005,6 +3005,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
                 typingEl.remove();
                 addMessage("Thanks for reaching out! 🎉\n\nI'm currently in demo mode while our team connects me to the live backend. In the meantime, you can:\n\n• Explore our RAG & AI chatbot solutions above\n• Check pricing in the Pricing section\n• Schedule a demo using the 'Schedule a Demonstration' button\n• Email us at contact@imikan-technologies.com\n\nOur team typically responds within 24 hours. What would you like to know more about?", 'bot');
                 sendBtn.disabled = false;
+                renderSuggestions();
                 startInactivityTimer();
             }, 1200);
             return;
@@ -3020,6 +3021,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             const data = await res.json();
             typingEl.remove();
             addMessage(data.answer || data.response || data.message || "I'm sorry, I didn't get a response. Please try again.", 'bot');
+            renderSuggestions();
             startInactivityTimer();
         } catch (err) {
             console.error('Mikan chat error:', err);
@@ -3070,7 +3072,6 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             chip.textContent = s.icon + ' ' + s.text;
             chip.onclick = () => {
                 doSend(s.query);
-                suggestionsEl.innerHTML = '';
             };
             suggestionsEl.appendChild(chip);
         });
@@ -3140,12 +3141,8 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             doOpen();
         });
 
-        // Close on outside click
-        document.addEventListener('click', (e) => {
-            if (isOpen && !panel.contains(e.target) && !launcher.contains(e.target) && !bubble.contains(e.target)) {
-                doClose();
-            }
-        });
+        // Chat only closes via X button or Escape key (not outside click)
+        // This keeps the chat open while users interact with the page
 
         // Keyboard: Escape closes
         document.addEventListener('keydown', (e) => {

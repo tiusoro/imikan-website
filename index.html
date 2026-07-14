@@ -3037,7 +3037,15 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     function addMessage(text, who) {
         const div = document.createElement('div');
         div.className = 'mikan-msg ' + who;
-        div.textContent = text;
+        // Parse markdown-style bold (**text**) into HTML <strong> tags
+        // Step 1: Escape any raw HTML to prevent XSS
+        let safe = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        // Step 2: Convert **bold text** to <strong>bold text</strong>
+        safe = safe.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        div.innerHTML = safe;
         messagesEl.appendChild(div);
         messagesEl.scrollTop = messagesEl.scrollHeight;
         return div;

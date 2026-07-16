@@ -2717,6 +2717,15 @@ response = <span class="text-purple-400">await</span> pipeline.query(
 }
 
 /* ── Suggestion chips ── */
+#mikan-suggestions-label {
+    padding: 0.4rem 1.15rem 0.15rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #818cf8;
+    flex-shrink: 0;
+}
 #mikan-suggestions {
     display: flex;
     flex-wrap: wrap;
@@ -2871,6 +2880,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     <div id="mikan-chat-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
 
     <!-- Suggestion chips -->
+    <div id="mikan-suggestions-label" style="display:none;">Click to Inquire</div>
     <div id="mikan-suggestions" role="list" aria-label="Quick suggestion topics"></div>
 
     <div id="mikan-chat-inputbar">
@@ -2913,6 +2923,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     const input = document.getElementById('mikan-chat-input');
     const sendBtn = document.getElementById('mikan-chat-send');
     const suggestionsEl = document.getElementById('mikan-suggestions');
+    const suggestionsLabelEl = document.getElementById('mikan-suggestions-label');
     const closeBtn = document.getElementById('mikan-chat-close');
 
     /* ── Guard: if any critical element is missing, abort silently ── */
@@ -3034,7 +3045,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
 
         // Hide suggestions on first user message
         if (!customText) {
-            suggestionsEl.innerHTML = '';
+            suggestionsEl.innerHTML = ''; if (suggestionsLabelEl) suggestionsLabelEl.style.display = 'none';
         }
 
         addMessage(text, 'user');
@@ -3111,7 +3122,8 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     }
 
     function renderSuggestions() {
-        suggestionsEl.innerHTML = '';
+        suggestionsEl.innerHTML = ''; if (suggestionsLabelEl) suggestionsLabelEl.style.display = 'none';
+        if (suggestionsLabelEl) suggestionsLabelEl.style.display = '';
         SUGGESTIONS.forEach(s => {
             const chip = document.createElement('button');
             chip.className = 'mikan-chip';
@@ -3133,7 +3145,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     /* ── Book a Demo: open the real scheduling form instead of just chatting ── */
     function handleBookDemoClick(userText) {
         addMessage(userText || '📅 Book a Demo', 'user');
-        suggestionsEl.innerHTML = '';
+        suggestionsEl.innerHTML = ''; if (suggestionsLabelEl) suggestionsLabelEl.style.display = 'none';
         const typingEl = addTyping();
         setTimeout(() => {
             typingEl.remove();
@@ -3155,6 +3167,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     function handlePricingClick(userText) {
         addMessage(userText || '💰 Pricing', 'user');
         suggestionsEl.innerHTML = '';
+        if (suggestionsLabelEl) suggestionsLabelEl.style.display = 'none';
         const typingEl = addTyping();
         setTimeout(() => {
             typingEl.remove();

@@ -2924,11 +2924,11 @@ response = <span class="text-purple-400">await</span> pipeline.query(
 
     /* ── Suggestion chips data ── */
     const SUGGESTIONS = [
-        { icon: '💰', text: 'Pricing', query: 'What are your pricing plans?' },
         { icon: '🤖', text: 'AI Chatbots', query: 'Tell me about your AI chatbot solutions' },
         { icon: '📄', text: 'RAG Solutions', query: 'What is RAG and how can it help my business?' },
-        { icon: '📅', text: 'Book a Demo', query: 'I would like to book a demo' },
+        { icon: '💰', text: 'Pricing', query: 'What are your pricing plans?' },
         { icon: '⚙️', text: 'Automation', query: 'How can AI automation help my business?' },
+        { icon: '📅', text: 'Book a Demo', query: 'I would like to book a demo', action: 'openDemoForm' },
         { icon: '📞', text: 'Contact Us', query: 'How can I contact your team?' }
     ];
 
@@ -2994,9 +2994,24 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     }
 
     /* ── Send message (preserves original API logic) ── */
+    /* ── Detect intent to book/schedule a demo from free-typed text ── */
+    function isDemoBookingIntent(text) {
+        const t = text.toLowerCase();
+        return (/\b(book|schedule|set up|setup|arrange|request)\b/.test(t) && /\bdemo\b/.test(t))
+            || /\bbook a demo\b/.test(t);
+    }
+
     async function doSend(customText) {
         const text = customText || input.value.trim();
         if (!text) return;
+
+        // If this looks like a demo-booking request, open the real scheduling form
+        // instead of sending it to the chat backend / canned demo-mode reply.
+        if (isDemoBookingIntent(text)) {
+            handleBookDemoClick(text);
+            if (!customText) input.value = '';
+            return;
+        }
 
         // Hide suggestions on first user message
         if (!customText) {
@@ -3082,10 +3097,35 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             chip.setAttribute('role', 'listitem');
             chip.textContent = s.icon + ' ' + s.text;
             chip.onclick = () => {
-                doSend(s.query);
+                if (s.action === 'openDemoForm') {
+                    handleBookDemoClick();
+                } else {
+                    doSend(s.query);
+                }
             };
             suggestionsEl.appendChild(chip);
         });
+    }
+
+    /* ── Book a Demo: open the real scheduling form instead of just chatting ── */
+    function handleBookDemoClick(userText) {
+        addMessage(userText || '📅 Book a Demo', 'user');
+        suggestionsEl.innerHTML = '';
+        const typingEl = addTyping();
+        setTimeout(() => {
+            typingEl.remove();
+            addMessage("Great! I've opened our demo scheduling form for you — just fill in your details and we'll get it booked. 🎉", 'bot');
+            renderSuggestions();
+            if (isOpen) doClose();
+            if (typeof openDemoForm === 'function') {
+                openDemoForm();
+            }
+        }, 700);
+
+        // Analytics
+        if (typeof gtag === 'function') {
+            gtag('event', 'chat_book_demo_click', { event_category: 'engagement', event_label: 'mikan_ai' });
+        }
     }
 
     /* ── Bubble lifecycle ── */

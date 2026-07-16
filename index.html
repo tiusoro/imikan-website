@@ -2926,7 +2926,7 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     const SUGGESTIONS = [
         { icon: '🤖', text: 'AI Chatbots', query: 'Tell me about your AI chatbot solutions' },
         { icon: '📄', text: 'RAG Solutions', query: 'What is RAG and how can it help my business?' },
-        { icon: '💰', text: 'Pricing', query: 'What are your pricing plans?' },
+        { icon: '💰', text: 'Pricing', query: 'What are your pricing plans?', action: 'scrollToPricing' },
         { icon: '⚙️', text: 'Automation', query: 'How can AI automation help my business?' },
         { icon: '📅', text: 'Book a Demo', query: 'I would like to book a demo', action: 'openDemoForm' },
         { icon: '📞', text: 'Contact Us', query: 'How can I contact your team?' }
@@ -3001,6 +3001,12 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             || /\bbook a demo\b/.test(t);
     }
 
+    /* ── Detect intent to see pricing from free-typed text ── */
+    function isPricingIntent(text) {
+        const t = text.toLowerCase();
+        return /\bpric(e|es|ing)\b/.test(t) || /\bcost\b/.test(t) || /how much/.test(t) || /\bplans?\b/.test(t);
+    }
+
     async function doSend(customText) {
         const text = customText || input.value.trim();
         if (!text) return;
@@ -3009,6 +3015,12 @@ response = <span class="text-purple-400">await</span> pipeline.query(
         // instead of sending it to the chat backend / canned demo-mode reply.
         if (isDemoBookingIntent(text)) {
             handleBookDemoClick(text);
+            if (!customText) input.value = '';
+            return;
+        }
+
+        if (isPricingIntent(text)) {
+            handlePricingClick(text);
             if (!customText) input.value = '';
             return;
         }
@@ -3099,6 +3111,8 @@ response = <span class="text-purple-400">await</span> pipeline.query(
             chip.onclick = () => {
                 if (s.action === 'openDemoForm') {
                     handleBookDemoClick();
+                } else if (s.action === 'scrollToPricing') {
+                    handlePricingClick();
                 } else {
                     doSend(s.query);
                 }
@@ -3125,6 +3139,30 @@ response = <span class="text-purple-400">await</span> pipeline.query(
         // Analytics
         if (typeof gtag === 'function') {
             gtag('event', 'chat_book_demo_click', { event_category: 'engagement', event_label: 'mikan_ai' });
+        }
+    }
+
+    /* ── Pricing: scroll to the real pricing section (RAG / AI Chatbot toggle) ── */
+    function handlePricingClick(userText) {
+        addMessage(userText || '💰 Pricing', 'user');
+        suggestionsEl.innerHTML = '';
+        const typingEl = addTyping();
+        setTimeout(() => {
+            typingEl.remove();
+            addMessage("Sure! I've taken you to our Pricing section below — you can toggle between RAG and AI Chatbot plans there. 💰", 'bot');
+            renderSuggestions();
+            doClose();
+            const pricingEl = document.getElementById('pricing');
+            if (pricingEl) {
+                setTimeout(() => {
+                    pricingEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 150);
+            }
+        }, 700);
+
+        // Analytics
+        if (typeof gtag === 'function') {
+            gtag('event', 'chat_pricing_click', { event_category: 'engagement', event_label: 'mikan_ai' });
         }
     }
 

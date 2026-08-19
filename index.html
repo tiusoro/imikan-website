@@ -3291,8 +3291,160 @@ response = <span class="text-purple-400">await</span> pipeline.query(
 </script>
 
 <script>
-!function(){"use strict";function e(){var e="imikan_banner_dismissed_until";try{var t=localStorage.getItem(e);if(t&&Date.now()<parseInt(t,10))return}catch(e){}var i=["#irb-banner{position:sticky;top:0;left:0;right:0;z-index:9999;","font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;","background:#0a0a1a;color:#f1f5f9;border-bottom:1px solid #22d3ee33;","box-shadow:0 4px 20px rgba(0,0,0,.35);transform:translateY(-100%);","transition:transform .35s ease;max-height:120px;overflow:hidden}","#irb-banner.irb-in{transform:translateY(0)}","#irb-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;","gap:1rem;padding:.6rem 1rem;flex-wrap:wrap}","#irb-copy{flex:1 1 320px;min-width:0}","#irb-h{font-size:.92rem;font-weight:700;line-height:1.3;margin:0}","#irb-s{font-size:.78rem;color:#94a3b8;margin:.15rem 0 0;line-height:1.3}","#irb-demo{flex:0 0 auto}","#irb-demo-btn{background:transparent;color:#22d3ee;border:1px solid #22d3ee66;","border-radius:999px;padding:.35rem .8rem;font-size:.74rem;font-weight:600;","cursor:pointer;white-space:nowrap}","#irb-demo-btn:hover{background:#22d3ee1a}","#irb-demo-out{font-size:.72rem;color:#e2e8f0;margin-top:.3rem;min-height:1.1em;","font-family:ui-monospace,SFMono-Regular,Menlo,monospace}","#irb-cite{display:inline-block;background:#8b5cf633;color:#c4b5fd;","border-radius:4px;padding:0 .35rem;margin-left:.3rem;font-size:.68rem}","#irb-actions{flex:0 0 auto;display:flex;align-items:center;gap:.6rem}","#irb-cta{background:linear-gradient(90deg,#22d3ee,#8b5cf6);color:#06131a;","font-weight:800;font-size:.82rem;padding:.55rem 1.1rem;border-radius:.5rem;","text-decoration:none;white-space:nowrap;box-shadow:0 2px 10px rgba(139,92,246,.35)}","#irb-badge{font-size:.62rem;color:#64748b;margin-top:.15rem}","#irb-close{background:none;border:none;color:#94a3b8;font-size:1.1rem;","line-height:1;cursor:pointer;padding:.25rem .4rem;border-radius:.35rem}","#irb-close:hover{color:#f1f5f9;background:#ffffff14}","#irb-close:focus-visible,#irb-demo-btn:focus-visible,#irb-cta:focus-visible{","outline:2px solid #22d3ee;outline-offset:2px}","@media(max-width:640px){#irb-inner{padding:.5rem .75rem}","#irb-h{font-size:.85rem}#irb-s{display:none}#irb-demo{order:3;flex:1 0 100%}","#irb-actions{order:2}}"].join(""),n=document.createElement("style");n.textContent=i,document.head.appendChild(n);var r=document.createElement("div");function o(){r.classList.remove("irb-in"),setTimeout(function(){r.remove()},350);try{var t=Date.now()+6048e5;localStorage.setItem(e,String(t))}catch(e){}}r.id="irb-banner",r.setAttribute("role","region"),r.setAttribute("aria-label","Try Imikan's RAG demo on your own document"),r.innerHTML='<div id="irb-inner"><div id="irb-copy"><p id="irb-h">You just read about our RAG systems. Now watch one answer a question from your own PDF.</p><p id="irb-s">Free, no credit card, no sales call &mdash; 2 documents and 10 questions a month on us.</p></div><div id="irb-demo"><button id="irb-demo-btn" type="button" aria-expanded="false">&#9654; See RAG in action</button><div id="irb-demo-out" aria-live="polite"></div></div><div id="irb-actions"><div><a id="irb-cta" href="https://imikan.ai/?utm_source=imikan-tech-site&utm_medium=banner&utm_campaign=rag-demo-drive">Try It Yourself &rarr;</a><div id="irb-badge">Powered by Imikan RAG</div></div><button id="irb-close" type="button" aria-label="Dismiss this banner for 7 days">&times;</button></div></div>',document.body.insertBefore(r,document.body.firstChild),requestAnimationFrame(function(){requestAnimationFrame(function(){r.classList.add("irb-in")})}),document.getElementById("irb-close").addEventListener("click",o),document.addEventListener("keydown",function(e){"Escape"===e.key&&document.body.contains(r)&&o()});var a=document.getElementById("irb-demo-btn"),d=document.getElementById("irb-demo-out"),s=!1;function m(e,t,i,n){var r=0;e.textContent="",function o(){r<=t.length?(e.textContent=t.slice(0,r),r++,setTimeout(o,i)):n&&n()}()}a.addEventListener("click",function(){s||(s=!0,a.setAttribute("aria-expanded","true"),d.textContent="",m(d,'> "What was our Q3 churn rate?"',28,function(){setTimeout(function(){d.textContent="🔍 Searching your documents…",setTimeout(function(){d.innerHTML="";var e=document.createElement("span");d.appendChild(e),m(e,"Q3 churn was 4.2%, driven mainly by the SMB tier.",14,function(){var e=document.createElement("span");e.id="irb-cite",e.textContent="Q3_Board_Deck.pdf, p.12",d.appendChild(e),s=!1})},700)},400)}))})}document.body?e():document.addEventListener("DOMContentLoaded",e)}();
+(function () {
+  "use strict";
+
+  // Guard against running before <body> exists -- e.g. if this script is
+  // ever moved into <head> or loaded async ahead of body parsing. When
+  // placed right before </body> (the recommended spot) this fires
+  // immediately since document.body is already there by then.
+  if (!document.body) {
+    document.addEventListener("DOMContentLoaded", init);
+    return;
+  }
+  init();
+
+  function init() {
+
+  var DISMISS_KEY = "imikan_banner_dismissed_until";
+  var DISMISS_DAYS = 7;
+  var CTA_URL = "https://imikan.ai/?utm_source=imikan-tech-site&utm_medium=banner&utm_campaign=rag-demo-drive";
+
+  // Respect a prior dismissal for 7 days -- check before building anything.
+  try {
+    var until = localStorage.getItem(DISMISS_KEY);
+    if (until && Date.now() < parseInt(until, 10)) return;
+  } catch (e) { /* localStorage blocked (privacy mode) -- fail open, show banner */ }
+
+  var css = [
+    "#irb-banner{position:sticky;top:0;left:0;right:0;z-index:9999;",
+    "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;",
+    "background:#0a0a1a;color:#f1f5f9;border-bottom:1px solid #22d3ee33;",
+    "box-shadow:0 4px 20px rgba(0,0,0,.35);transform:translateY(-100%);",
+    "transition:transform .35s ease;max-height:120px;overflow:hidden}",
+    "#irb-banner.irb-in{transform:translateY(0)}",
+    "#irb-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;",
+    "gap:1rem;padding:.6rem 1rem;flex-wrap:wrap}",
+    "#irb-copy{flex:1 1 320px;min-width:0}",
+    "#irb-h{font-size:.92rem;font-weight:700;line-height:1.3;margin:0}",
+    "#irb-s{font-size:.78rem;color:#94a3b8;margin:.15rem 0 0;line-height:1.3}",
+    "#irb-demo{flex:0 0 auto}",
+    "#irb-demo-btn{background:transparent;color:#22d3ee;border:1px solid #22d3ee66;",
+    "border-radius:999px;padding:.35rem .8rem;font-size:.74rem;font-weight:600;",
+    "cursor:pointer;white-space:nowrap}",
+    "#irb-demo-btn:hover{background:#22d3ee1a}",
+    "#irb-demo-out{font-size:.72rem;color:#e2e8f0;margin-top:.3rem;min-height:1.1em;",
+    "font-family:ui-monospace,SFMono-Regular,Menlo,monospace}",
+    "#irb-cite{display:inline-block;background:#8b5cf633;color:#c4b5fd;",
+    "border-radius:4px;padding:0 .35rem;margin-left:.3rem;font-size:.68rem}",
+    "#irb-actions{flex:0 0 auto;display:flex;align-items:center;gap:.6rem}",
+    "#irb-cta{background:linear-gradient(90deg,#22d3ee,#8b5cf6);color:#06131a;",
+    "font-weight:800;font-size:.82rem;padding:.55rem 1.1rem;border-radius:.5rem;",
+    "text-decoration:none;white-space:nowrap;box-shadow:0 2px 10px rgba(139,92,246,.35)}",
+    "#irb-badge{font-size:.62rem;color:#64748b;margin-top:.15rem}",
+    "#irb-close{background:none;border:none;color:#94a3b8;font-size:1.1rem;",
+    "line-height:1;cursor:pointer;padding:.25rem .4rem;border-radius:.35rem}",
+    "#irb-close:hover{color:#f1f5f9;background:#ffffff14}",
+    "#irb-close:focus-visible,#irb-demo-btn:focus-visible,#irb-cta:focus-visible{",
+    "outline:2px solid #22d3ee;outline-offset:2px}",
+    "@media(max-width:640px){#irb-inner{padding:.5rem .75rem}",
+    "#irb-h{font-size:.85rem}#irb-s{display:none}#irb-demo{order:3;flex:1 0 100%}",
+    "#irb-actions{order:2}}"
+  ].join("");
+
+  var styleEl = document.createElement("style");
+  styleEl.textContent = css;
+  document.head.appendChild(styleEl);
+
+  var wrap = document.createElement("div");
+  wrap.id = "irb-banner";
+  wrap.setAttribute("role", "region");
+  wrap.setAttribute("aria-label", "Try Imikan's RAG demo on your own document");
+  wrap.innerHTML =
+    '<div id="irb-inner">' +
+      '<div id="irb-copy">' +
+        '<p id="irb-h">Chat with your PDFs. No setup, no credit card — just answers.</p>' +
+        '<p id="irb-s">2 documents, 10 questions/month on us.</p>' +
+      "</div>" +
+      '<div id="irb-demo">' +
+        '<button id="irb-demo-btn" type="button" aria-expanded="false">&#9654; See RAG in action</button>' +
+        '<div id="irb-demo-out" aria-live="polite"></div>' +
+      "</div>" +
+      '<div id="irb-actions">' +
+        '<div>' +
+          '<a id="irb-cta" href="' + CTA_URL + '">Try It Yourself &rarr;</a>' +
+          '<div id="irb-badge">Powered by Imikan RAG</div>' +
+        "</div>" +
+        '<button id="irb-close" type="button" aria-label="Dismiss this banner for 7 days">&times;</button>' +
+      "</div>" +
+    "</div>";
+
+  document.body.insertBefore(wrap, document.body.firstChild);
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { wrap.classList.add("irb-in"); });
+  });
+
+  function dismiss() {
+    wrap.classList.remove("irb-in");
+    setTimeout(function () { wrap.remove(); }, 350);
+    try {
+      var expiry = Date.now() + DISMISS_DAYS * 24 * 60 * 60 * 1000;
+      localStorage.setItem(DISMISS_KEY, String(expiry));
+    } catch (e) { /* ignore -- worst case it reappears next visit */ }
+  }
+
+  document.getElementById("irb-close").addEventListener("click", dismiss);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && document.body.contains(wrap)) dismiss();
+  });
+
+  // Lightweight typewriter demo -- shows a question being asked, a
+  // "searching" beat, then a grounded answer with a source citation.
+  // Pure vanilla JS, no dependencies, plays once per click.
+  var demoBtn = document.getElementById("irb-demo-btn");
+  var demoOut = document.getElementById("irb-demo-out");
+  var demoPlaying = false;
+
+  function typeInto(el, text, speed, done) {
+    var i = 0;
+    el.textContent = "";
+    (function step() {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        i++;
+        setTimeout(step, speed);
+      } else if (done) { done(); }
+    })();
+  }
+
+  demoBtn.addEventListener("click", function () {
+    if (demoPlaying) return;
+    demoPlaying = true;
+    demoBtn.setAttribute("aria-expanded", "true");
+    demoOut.textContent = "";
+    typeInto(demoOut, '> "What was our Q3 churn rate?"', 28, function () {
+      setTimeout(function () {
+        demoOut.textContent = "\u{1F50D} Searching your documents…";
+        setTimeout(function () {
+          demoOut.innerHTML = "";
+          var ans = document.createElement("span");
+          demoOut.appendChild(ans);
+          typeInto(ans, "Q3 churn was 4.2%, driven mainly by the SMB tier.", 14, function () {
+            var cite = document.createElement("span");
+            cite.id = "irb-cite";
+            cite.textContent = "Q3_Board_Deck.pdf, p.12";
+            demoOut.appendChild(cite);
+            demoPlaying = false;
+          });
+        }, 700);
+      }, 400);
+    });
+  });
+
+  } // end init()
+})();
 </script>
+
 
 </body>
 </html>

@@ -1,4 +1,4 @@
-# Imikan Technologies AI — RAG & Shopify AI Integrations Landing Page
+# Imikan Technologies Ltd AI — RAG & Shopify AI Integrations Landing Page
 
 A modern, production-ready landing page for an AI integrations company specializing in **Retrieval-Augmented Generation (RAG)** pipelines and **Shopify AI automation**.
 
@@ -276,6 +276,6 @@ MIT License — feel free to use for personal or commercial projects. Attributio
 ---
 
 <p align="center">
-  <strong>Built with 💜 and 💙 by the Imikan Technologies Team</strong><br>
+  <strong>Built with 💜 and 💙 by the Imikan Technologies Ltd Team</strong><br>
   <sub>Transforming data into intelligence, one query at a time.</sub>
 </p>

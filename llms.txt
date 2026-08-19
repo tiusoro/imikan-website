@@ -1,10 +1,10 @@
-# Imikan Technologies
+# Imikan Technologies Ltd
 
-> Imikan Technologies is a self-hosted RAG (Retrieval-Augmented Generation) and AI chatbot vendor for regulated industries — banking, legal, healthcare, and government — serving Nigeria, Africa, and worldwide. We build enterprise AI systems with data residency, source citations, and sub-second latency.
+> Imikan Technologies Ltd is a self-hosted RAG (Retrieval-Augmented Generation) and AI chatbot vendor for regulated industries — banking, legal, healthcare, and government — serving Nigeria, Africa, and worldwide. We build enterprise AI systems with data residency, source citations, and sub-second latency.
 
-Imikan Technologies helps organizations turn their unstructured documents into intelligent, verifiable AI. Our systems keep data on infrastructure the client controls, cite their sources, and are built for the accuracy standards that regulated sectors require.
+Imikan Technologies Ltd helps organizations turn their unstructured documents into intelligent, verifiable AI. Our systems keep data on infrastructure the client controls, cite their sources, and are built for the accuracy standards that regulated sectors require.
 
-- Website: [Imikan Technologies](https://www.imikan-technologies.com/)
+- Website: [Imikan Technologies Ltd](https://www.imikan-technologies.com/)
 - Location: Lagos, Nigeria (serving Nigeria, Africa, and global markets)
 - Email: [contact@imikan-technologies.com](mailto:contact@imikan-technologies.com)
 - Phone: [+234 809 378 1000](tel:+2348093781000)

@@ -1,4 +1,4 @@
-# Imikan Technologies - SEO Summary
+# Imikan Technologies Ltd - SEO Summary
 
 ## Website: https://www.imikan-technologies.com/
 ## Last updated: 2026-07-11
@@ -8,10 +8,10 @@
 ## 1. ON-PAGE SEO
 
 ### Title Tag (current)
-`Imikan Technologies | RAG & AI Chatbots | Nigeria & Africa`
+`Imikan Technologies Ltd | RAG & AI Chatbots | Nigeria & Africa`
 
 ### Meta Description (current)
-`Imikan Technologies is a self-hosted RAG and AI chatbot vendor for banking, legal, healthcare, and government clients across Nigeria, Africa & worldwide.`
+`Imikan Technologies Ltd is a self-hosted RAG and AI chatbot vendor for banking, legal, healthcare, and government clients across Nigeria, Africa & worldwide.`
 
 Both are trimmed to spec length and reflect the actual, verifiable business description — no inflated claims.
 
@@ -145,6 +145,6 @@ All three of these are linked from `llms.txt`; index.html links to at least the 
 
 ---
 
-**Maintained by:** Imikan Technologies
+**Maintained by:** Imikan Technologies Ltd
 **Contact:** contact@imikan-technologies.com
 **Website:** https://www.imikan-technologies.com/

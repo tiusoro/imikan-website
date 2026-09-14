@@ -3416,29 +3416,35 @@ response = <span class="text-purple-400">await</span> pipeline.query(
     })();
   }
 
-  demoBtn.addEventListener("click", function () {
-    if (demoPlaying) return;
-    demoPlaying = true;
-    demoBtn.setAttribute("aria-expanded", "true");
-    demoOut.textContent = "";
-    typeInto(demoOut, '> "What was our Q3 churn rate?"', 28, function () {
-      setTimeout(function () {
-        demoOut.textContent = "\u{1F50D} Searching your documents…";
+  // Guarded: #irb-demo-btn / #irb-demo-out are not part of the banner's
+  // markup (styled via CSS above but never inserted into wrap.innerHTML),
+  // so this feature is currently dormant. Guard rather than assume
+  // presence -- previously this threw on every page load.
+  if (demoBtn && demoOut) {
+    demoBtn.addEventListener("click", function () {
+      if (demoPlaying) return;
+      demoPlaying = true;
+      demoBtn.setAttribute("aria-expanded", "true");
+      demoOut.textContent = "";
+      typeInto(demoOut, '> "What was our Q3 churn rate?"', 28, function () {
         setTimeout(function () {
-          demoOut.innerHTML = "";
-          var ans = document.createElement("span");
-          demoOut.appendChild(ans);
-          typeInto(ans, "Q3 churn was 4.2%, driven mainly by the SMB tier.", 14, function () {
-            var cite = document.createElement("span");
-            cite.id = "irb-cite";
-            cite.textContent = "Q3_Board_Deck.pdf, p.12";
-            demoOut.appendChild(cite);
-            demoPlaying = false;
-          });
-        }, 700);
-      }, 400);
+          demoOut.textContent = "\u{1F50D} Searching your documents…";
+          setTimeout(function () {
+            demoOut.innerHTML = "";
+            var ans = document.createElement("span");
+            demoOut.appendChild(ans);
+            typeInto(ans, "Q3 churn was 4.2%, driven mainly by the SMB tier.", 14, function () {
+              var cite = document.createElement("span");
+              cite.id = "irb-cite";
+              cite.textContent = "Q3_Board_Deck.pdf, p.12";
+              demoOut.appendChild(cite);
+              demoPlaying = false;
+            });
+          }, 700);
+        }, 400);
+      });
     });
-  });
+  }
 
   } // end init()
 })();

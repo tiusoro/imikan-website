@@ -472,6 +472,7 @@
     </script>
 
     <style>.footer-wa-break{display:inline}.footer-wa-sep{display:none}.footer-legal{font-size:10px;color:#4b5563;line-height:1.625;margin-bottom:1.25rem}.footer-legal p{margin-top:.25rem}.footer-legal p:first-child{margin-top:0}.footer-legal-name{color:#4b5563}@media (min-width:640px){.footer-wa-break{display:none}.footer-wa-sep{display:inline}.footer-legal{font-size:.75rem;color:#6b7280;margin-bottom:1.5rem}.footer-legal-name{color:#9ca3af;font-weight:500}}</style>
+<style id="imikan-form-validation-css">.req-star{color:#f87171;margin-left:2px}.field-error{display:none;color:#f87171;font-size:.75rem;line-height:1rem;margin-top:.375rem}.field-error.show{display:block}.input-invalid{border-color:#f87171!important;box-shadow:0 0 0 1px rgba(248,113,113,.5)!important}.hp-field{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}</style>
 </head>
 
 <!-- Google tag (gtag.js) -->
@@ -781,28 +782,30 @@ window.addEventListener('load', function() {
                     <h3 class="font-display text-xl sm:text-2xl font-bold text-white mb-2">Book Your Demo</h3>
                     <p class="text-gray-400 text-sm">Tell us about your needs and we will schedule a personalized walkthrough.</p>
                 </div>
-                <form id="demo-schedule-form" onsubmit="handleDemoFormSubmit(event)">
+                <form id="demo-schedule-form" onsubmit="handleDemoFormSubmit(event)" novalidate>
+                    <!-- Honeypot (spam trap): hidden from people, bots tick it -->
+                    <div class="hp-field" aria-hidden="true"><label for="demo-botcheck">Leave this unchecked</label><input type="checkbox" id="demo-botcheck" name="botcheck" tabindex="-1" autocomplete="off"></div>
                     <div class="space-y-4">
                         <div>
-                            <label for="demo-name" class="block text-sm font-medium text-gray-300 mb-1.5">Full Name</label>
+                            <label for="demo-name" class="block text-sm font-medium text-gray-300 mb-1.5">Full Name <span class="req-star" aria-hidden="true">*</span></label>
                             <input type="text" id="demo-name" name="name" required 
                                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/50 transition-all text-sm"
                                 placeholder="John Doe">
                         </div>
                         <div>
-                            <label for="demo-email" class="block text-sm font-medium text-gray-300 mb-1.5">Email Address</label>
+                            <label for="demo-email" class="block text-sm font-medium text-gray-300 mb-1.5">Email Address <span class="req-star" aria-hidden="true">*</span></label>
                             <input type="email" id="demo-email" name="email" required 
                                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/50 transition-all text-sm"
                                 placeholder="john@company.com">
                         </div>
                         <div>
-                            <label for="demo-phone" class="block text-sm font-medium text-gray-300 mb-1.5">Phone Number</label>
+                            <label for="demo-phone" class="block text-sm font-medium text-gray-300 mb-1.5">Phone Number <span class="req-star" aria-hidden="true">*</span></label>
                             <input type="tel" id="demo-phone" name="phone" required 
                                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/50 transition-all text-sm"
                                 placeholder="+1 (555) 000-0000">
                         </div>
                         <div>
-                            <label for="demo-description" class="block text-sm font-medium text-gray-300 mb-1.5">What are you looking for?</label>
+                            <label for="demo-description" class="block text-sm font-medium text-gray-300 mb-1.5">What are you looking for? <span class="req-star" aria-hidden="true">*</span></label>
                             <textarea id="demo-description" name="description" rows="4" required 
                                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500/50 transition-all text-sm resize-none"
                                 placeholder="Tell us about your business, current challenges, and what you hope to achieve with AI..."></textarea>
@@ -846,28 +849,30 @@ window.addEventListener('load', function() {
                     <h3 id="form-title" class="font-display text-xl sm:text-2xl font-bold text-white mb-2">Get Started</h3>
                     <p class="text-gray-400 text-sm">Fill out the form below and our team will reach out within 24 hours.</p>
                 </div>
-                <form id="contact-form" onsubmit="handleFormSubmit(event)">
+                <form id="contact-form" onsubmit="handleFormSubmit(event)" novalidate>
+                    <!-- Honeypot (spam trap): hidden from people, bots tick it -->
+                    <div class="hp-field" aria-hidden="true"><label for="form-botcheck">Leave this unchecked</label><input type="checkbox" id="form-botcheck" name="botcheck" tabindex="-1" autocomplete="off"></div>
                     <div class="space-y-4">
                         <div>
-                            <label for="form-name" class="block text-sm font-medium text-gray-300 mb-1.5">Full Name</label>
+                            <label for="form-name" class="block text-sm font-medium text-gray-300 mb-1.5">Full Name <span class="req-star" aria-hidden="true">*</span></label>
                             <input type="text" id="form-name" name="name" required 
                                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all text-sm"
                                 placeholder="John Doe">
                         </div>
                         <div>
-                            <label for="form-email" class="block text-sm font-medium text-gray-300 mb-1.5">Email Address</label>
+                            <label for="form-email" class="block text-sm font-medium text-gray-300 mb-1.5">Email Address <span class="req-star" aria-hidden="true">*</span></label>
                             <input type="email" id="form-email" name="email" required 
                                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all text-sm"
                                 placeholder="john@company.com">
                         </div>
                         <div>
-                            <label for="form-phone" class="block text-sm font-medium text-gray-300 mb-1.5">Phone Number</label>
+                            <label for="form-phone" class="block text-sm font-medium text-gray-300 mb-1.5">Phone Number <span class="req-star" aria-hidden="true">*</span></label>
                             <input type="tel" id="form-phone" name="phone" required 
                                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all text-sm"
                                 placeholder="+1 (555) 000-0000">
                         </div>
                         <div>
-                            <label for="form-description" class="block text-sm font-medium text-gray-300 mb-1.5">Project Description</label>
+                            <label for="form-description" class="block text-sm font-medium text-gray-300 mb-1.5">Project Description <span class="req-star" aria-hidden="true">*</span></label>
                             <textarea id="form-description" name="description" rows="4" required 
                                 class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500/50 transition-all text-sm resize-none"
                                 placeholder="Tell us about your project, requirements, and timeline..."></textarea>
@@ -1158,10 +1163,17 @@ window.addEventListener('load', function() {
 
         async function handleDemoFormSubmit(e) {
             e.preventDefault();
-            const name = document.getElementById('demo-name').value;
-            const email = document.getElementById('demo-email').value;
-            const phone = document.getElementById('demo-phone').value;
-            const description = document.getElementById('demo-description').value;
+            if (!validateImikanForm(e.target)) return;
+            if (imikanIsBot(e.target)) {
+                // Spam trap triggered: pretend it worked, send nothing.
+                document.getElementById('demo-schedule-form').classList.add('hidden');
+                document.getElementById('demo-form-success').classList.remove('hidden');
+                return;
+            }
+            const name = document.getElementById('demo-name').value.trim();
+            const email = document.getElementById('demo-email').value.trim();
+            const phone = document.getElementById('demo-phone').value.trim();
+            const description = document.getElementById('demo-description').value.trim();
             const submitBtn = document.getElementById('demo-submit-btn');
             const submitText = document.getElementById('demo-submit-text');
             const submitIcon = document.getElementById('demo-submit-icon');
@@ -1183,7 +1195,7 @@ window.addEventListener('load', function() {
                 if (ok) {
                     showToast('Demo request submitted successfully!', 'success');
                     // Google Analytics event tracking
-                    gtag('event', 'demo_request', {
+                    if (typeof gtag === 'function') gtag('event', 'demo_request', {
                         'event_category': 'form',
                         'event_label': 'demo_schedule',
                         'value': 1
@@ -1251,10 +1263,17 @@ window.addEventListener('load', function() {
 
         async function handleFormSubmit(e) {
             e.preventDefault();
-            const name = document.getElementById('form-name').value;
-            const email = document.getElementById('form-email').value;
-            const phone = document.getElementById('form-phone').value;
-            const description = document.getElementById('form-description').value;
+            if (!validateImikanForm(e.target)) return;
+            if (imikanIsBot(e.target)) {
+                // Spam trap triggered: pretend it worked, send nothing.
+                document.getElementById('contact-form').classList.add('hidden');
+                document.getElementById('form-success').classList.remove('hidden');
+                return;
+            }
+            const name = document.getElementById('form-name').value.trim();
+            const email = document.getElementById('form-email').value.trim();
+            const phone = document.getElementById('form-phone').value.trim();
+            const description = document.getElementById('form-description').value.trim();
             const plan = document.getElementById('form-title').textContent;
             const submitBtn = document.getElementById('submit-btn');
             const submitText = document.getElementById('submit-text');
@@ -1276,7 +1295,7 @@ window.addEventListener('load', function() {
 
                 if (ok) {
                     showToast('Inquiry submitted successfully!', 'success');
-                    gtag('event', 'pricing_inquiry', {
+                    if (typeof gtag === 'function') gtag('event', 'pricing_inquiry', {
                         'event_category': 'form',
                         'event_label': document.getElementById('form-title').textContent,
                         'value': 1
@@ -1582,5 +1601,119 @@ window.addEventListener('load', function() {
 -->
 
 
+
+<!-- imikan-form-validation: required fields + format checks + honeypot for the pricing & demo forms -->
+<script>
+(function () {
+  var LETTERS = 'A-Za-zÀ-ɏ';
+  var RULES = {
+    name: {
+      empty: 'Please enter your full name.',
+      msg: 'Please enter your full name (letters only).',
+      test: function (v) {
+        return new RegExp('^[' + LETTERS + "' .-]+$").test(v) &&
+               v.replace(new RegExp('[^' + LETTERS + ']', 'g'), '').length >= 2;
+      }
+    },
+    email: {
+      empty: 'Please enter your email address.',
+      msg: 'Please enter a valid email address (e.g. john@company.com).',
+      test: function (v) {
+        return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/.test(v) &&
+               v.indexOf('..') === -1 && !/^\./.test(v) && !/\.@/.test(v);
+      }
+    },
+    phone: {
+      empty: 'Please enter your phone number.',
+      msg: 'Please enter a valid phone number (7–15 digits, e.g. +234 803 123 4567).',
+      test: function (v) {
+        if (!/^\+?[0-9\s()\-]+$/.test(v)) return false;
+        var d = v.replace(/\D/g, '');
+        return d.length >= 7 && d.length <= 15 && !/^(\d)\1+$/.test(d);
+      }
+    },
+    description: {
+      empty: 'Please tell us about your project or needs.',
+      msg: 'Please tell us a bit more (at least 20 characters).',
+      test: function (v) { return v.length >= 20; }
+    }
+  };
+
+  function errorBox(field) {
+    var id = field.id + '-error';
+    var el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement('p');
+      el.id = id;
+      el.className = 'field-error';
+      el.setAttribute('role', 'alert');
+      field.insertAdjacentElement('afterend', el);
+      field.setAttribute('aria-describedby', id);
+    }
+    return el;
+  }
+
+  function setState(field, message) {
+    var el = errorBox(field);
+    if (message) {
+      el.textContent = message;
+      el.classList.add('show');
+      field.classList.add('input-invalid');
+      field.setAttribute('aria-invalid', 'true');
+    } else {
+      el.textContent = '';
+      el.classList.remove('show');
+      field.classList.remove('input-invalid');
+      field.removeAttribute('aria-invalid');
+    }
+  }
+
+  function checkField(field) {
+    var rule = RULES[field.name];
+    if (!rule) return true;
+    var v = field.value.trim();
+    var message = !v ? rule.empty : (!rule.test(v) ? rule.msg : '');
+    setState(field, message);
+    return !message;
+  }
+
+  // Called by handleFormSubmit / handleDemoFormSubmit before anything is sent.
+  window.validateImikanForm = function (form) {
+    var ok = true, first = null;
+    Object.keys(RULES).forEach(function (n) {
+      var f = form.elements[n];
+      if (f && !checkField(f)) { ok = false; if (!first) first = f; }
+    });
+    if (first) first.focus();
+    return ok;
+  };
+
+  // Honeypot: a hidden box real people never see. If it is ticked/filled, it's a bot.
+  window.imikanIsBot = function (form) {
+    var hp = form.elements['botcheck'];
+    return !!(hp && (hp.checked || (hp.value && hp.type !== 'checkbox')));
+  };
+
+  function wire(form) {
+    if (!form) return;
+    Object.keys(RULES).forEach(function (n) {
+      var f = form.elements[n];
+      if (!f) return;
+      f.addEventListener('blur', function () { if (f.value.trim() !== '') checkField(f); });
+      f.addEventListener('input', function () { if (f.classList.contains('input-invalid')) checkField(f); });
+    });
+    form.addEventListener('reset', function () {
+      Object.keys(RULES).forEach(function (n) { var f = form.elements[n]; if (f) setState(f, ''); });
+    });
+  }
+
+  function init() {
+    wire(document.getElementById('contact-form'));
+    wire(document.getElementById('demo-schedule-form'));
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
 </body>
 </html>
